@@ -40,7 +40,7 @@ button{margin-top:14px;border:0;background:linear-gradient(135deg,var(--accent),
 <body>
 <div class="wrap">
 <header class="hero">
-  <div class="eyebrow">NATAL × TODAY'S TRANSIT</div>
+  <div class="eyebrow">NATAL × TODAY'S TRANSIT · v2</div>
   <h1>Coffee<br>Horoscope</h1>
   <p class="lead">生まれた日の惑星配置と今日の星の動きを重ね、今日のあなたに似合うコーヒーを提案します。</p>
 </header>
@@ -215,11 +215,20 @@ function calculate(){
   bodies.forEach(([jp,en])=>{natal[jp]=planetLon(en,birthDate);transit[jp]=planetLon(en,today)});
   const inner=["太陽","月","水星","金星","火星"],aspects={};
   bodies.forEach(([jp])=>aspects[jp]=strongestAspect(transit[jp],natal,inner));
-  const signs={};inner.forEach(n=>signs[n]=signFromLon(transit[n]));
-  const sun=coffee[signs["太陽"]],moon=coffee[signs["月"]],mercury=coffee[signs["水星"]],venus=coffee[signs["金星"]],mars=coffee[signs["火星"]];
+  const signs={}, natalSigns={};
+  inner.forEach(n=>{
+    signs[n]=signFromLon(transit[n]);
+    natalSigns[n]=signFromLon(natal[n]);
+  });
+  // 人ごとの違いは出生図を核にし、今日のトランジットは強度・修飾に使う
+  const sun=coffee[natalSigns["太陽"]],
+        moon=coffee[natalSigns["月"]],
+        mercury=coffee[natalSigns["水星"]],
+        venus=coffee[natalSigns["金星"]],
+        mars=coffee[natalSigns["火星"]];
   const origin=venus.origin,range=roastRanges[origin],rs=aspects["金星"].score,ri=Math.min(range.length-1,Math.floor((rs/5)*range.length)),roast=range[ri];
   const outer=["木星","土星","天王星","海王星","冥王星"].map(n=>({name:n,...aspects[n]})).sort((a,b)=>b.score-a.score),dom=outer[0];
-  const modifier=dom.score?outerMeaning[dom.name]:"今日の流れを自然に受け取る";
+  const modifier=dom.score?(outerMeaning[dom.name]||"今日の流れに少し変化を加える"):"今日の流れを自然に受け取る";
   const ci=Math.max(1,Math.min(5,Math.round((aspects["太陽"].score+aspects["金星"].score+aspects["火星"].score+Math.max(1,dom.score))/4)));
   const dayKey=today.toISOString().slice(0,10),pair=pairings[origin][stableIndex(birth+code+dayKey+origin,pairings[origin].length)];
   let rare="";
@@ -227,14 +236,14 @@ function calculate(){
   document.getElementById("dateLabel").textContent=`${dayKey.replaceAll("-",".")} / ${countryName}・${capital}基準`;
   document.getElementById("headline").textContent=`${origin}を、${mars.style}で。`;
   document.getElementById("dominantBadge").textContent=dom.score?`${dom.name} ${dom.score}/5`:"穏やかな星回り";
-  document.getElementById("story").textContent=`今日は「${sun.theme}」が全体の空気感。${moon.scene}に、${origin}の${roast}を${mars.style}で楽しむ流れです。${mercury.connection}ことを意識しながら、${modifier}と、今日の星の配置が自然につながります。${rare}`;
+  document.getElementById("story").textContent=`今日は「${sun.theme}」が全体の空気感。${moon.scene}に、${origin}の${roast}を${mars.style}で楽しむ流れです。${mercury.connection}ことを意識すると、${modifier}流れになりそうです。${rare}`;
   document.getElementById("coffeeStars").textContent="★".repeat(ci)+"☆".repeat(5-ci);document.getElementById("coffeeIndex").textContent=`${ci}/5`;
-  document.getElementById("origin").textContent=`${origin}（金星 ${symbol[signs["金星"]]}${signs["金星"]}）`;
+  document.getElementById("origin").textContent=`${origin}（出生金星 ${symbol[natalSigns["金星"]]}${natalSigns["金星"]}）`;
   document.getElementById("roast").textContent=`${roast}（金星アスペクト ${rs}/5）`;
-  document.getElementById("style").textContent=`${mars.style}（火星 ${symbol[signs["火星"]]}${signs["火星"]}）`;
-  document.getElementById("scene").textContent=`${moon.scene}（月 ${symbol[signs["月"]]}${signs["月"]}）`;
-  document.getElementById("connection").textContent=`${mercury.connection}（水星 ${symbol[signs["水星"]]}${signs["水星"]}）`;
-  document.getElementById("theme").textContent=`${sun.theme}（太陽 ${symbol[signs["太陽"]]}${signs["太陽"]}）`;
+  document.getElementById("style").textContent=`${mars.style}（出生火星 ${symbol[natalSigns["火星"]]}${natalSigns["火星"]}）`;
+  document.getElementById("scene").textContent=`${moon.scene}（出生月 ${symbol[natalSigns["月"]]}${natalSigns["月"]}）`;
+  document.getElementById("connection").textContent=`${mercury.connection}（出生水星 ${symbol[natalSigns["水星"]]}${natalSigns["水星"]}）`;
+  document.getElementById("theme").textContent=`${sun.theme}（出生太陽 ${symbol[natalSigns["太陽"]]}${natalSigns["太陽"]}）`;
   document.getElementById("pairing").textContent=`今日のお供は「${pair}」。${origin}の${roast}に合わせた別枠の提案です。`;
   document.getElementById("tip").textContent=tips[mars.style];
   const tags=Object.entries(aspects).filter(([,a])=>a.score>0).sort((a,b)=>b[1].score-a[1].score).slice(0,5);
