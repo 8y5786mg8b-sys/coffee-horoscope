@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Coffee Horoscope</title>
+<style>
+:root{--bg:#f4eee6;--card:#fffdf9;--ink:#30251e;--muted:#786a61;--accent:#75482e;--line:#e7d9cc;--shadow:0 16px 42px rgba(63,40,26,.12)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);background:radial-gradient(circle at 90% 0,#fff9ef 0,transparent 35%),linear-gradient(180deg,#f8f2eb,#eee2d6);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI","Yu Gothic",sans-serif}
+.wrap{max-width:820px;margin:auto;padding:22px 14px 60px}.hero{padding:26px 6px 18px}
+.eyebrow{font-size:.76rem;letter-spacing:.18em;color:var(--accent);font-weight:800}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.3rem,9vw,4.2rem);line-height:.92;margin:.45rem 0 .9rem}
+.lead{color:var(--muted);line-height:1.75;margin:0;max-width:42rem}
+.card{background:rgba(255,253,249,.96);border:1px solid rgba(255,255,255,.78);border-radius:25px;box-shadow:var(--shadow);padding:20px;margin:14px 0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;font-size:.86rem;font-weight:800;margin:0 0 7px}
+input,select,button{width:100%;border-radius:14px;border:1px solid var(--line);padding:14px 15px;font-size:1rem;background:white;color:var(--ink)}
+button{margin-top:14px;border:0;background:linear-gradient(135deg,var(--accent),#9a6542);color:#fff;font-weight:850;letter-spacing:.035em;box-shadow:0 10px 24px rgba(117,72,46,.25)}
+.note{font-size:.78rem;color:var(--muted);line-height:1.65;margin:12px 0 0}.hidden{display:none}
+.status{padding:15px;border-radius:16px;background:#fff7ed;border:1px solid #ead7c3;color:#6c503d;line-height:1.7}
+.result-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.title{font-family:Georgia,"Times New Roman",serif;font-size:1.8rem;margin:.2rem 0 .5rem}
+.badge{padding:8px 11px;border-radius:999px;background:#efe1d2;color:var(--accent);font-size:.78rem;font-weight:850;white-space:nowrap}
+.story{line-height:1.92;font-size:1.04rem;margin:14px 0 0}
+.index{display:flex;align-items:center;gap:10px;margin-top:15px;padding-top:14px;border-top:1px solid var(--line)}
+.stars{letter-spacing:.12em;color:#b17438;font-size:1.12rem}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+.item{border:1px solid var(--line);border-radius:18px;padding:15px;background:#fffaf4}.item .icon{font-size:1.35rem}
+.item small{display:block;color:var(--muted);margin:.35rem 0 .18rem}.item strong{font-size:1.02rem;line-height:1.45}
+.section-title{font-size:.8rem;letter-spacing:.14em;color:var(--accent);font-weight:850;margin:0 0 10px}
+.tip{line-height:1.82;margin:0}.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tag{font-size:.76rem;padding:7px 9px;border-radius:999px;border:1px solid var(--line);background:#fff}
+.planet-list{display:grid;gap:9px}.planet{display:grid;grid-template-columns:84px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.planet:last-child{border-bottom:0}.planet .pname{font-weight:800}.planet .detail{color:var(--muted);font-size:.88rem}.planet .score{font-weight:850;color:var(--accent)}
+.footer{font-size:.76rem;color:var(--muted);line-height:1.7;padding:12px 6px}
+@media(max-width:570px){.row,.grid{grid-template-columns:1fr}.card{padding:17px;border-radius:21px}.planet{grid-template-columns:72px 1fr auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">NATAL × TODAY'S TRANSIT</div>
+  <h1>Coffee<br>Horoscope</h1>
+  <p class="lead">生まれた日の惑星配置と今日の星の動きを重ね、今日のあなたに似合うコーヒーを提案します。</p>
+</header>
+
+<section class="card">
+  <div class="row">
+    <div>
+      <label for="birth">生年月日</label>
+      <input id="birth" type="date" value="1980-01-01">
+    </div>
+    <div>
+      <label for="country">生まれた国（首都基準）</label>
+      <select id="country">
+        <option value="JP|9|日本|東京">日本（東京）</option>
+        <option value="KR|9|韓国|ソウル">韓国（ソウル）</option>
+        <option value="CN|8|中国|北京">中国（北京）</option>
+        <option value="TW|8|台湾|台北">台湾（台北）</option>
+        <option value="HK|8|香港|香港">香港</option>
+        <option value="US|-5|アメリカ|ワシントンD.C.">アメリカ（ワシントンD.C.）</option>
+        <option value="CA|-5|カナダ|オタワ">カナダ（オタワ）</option>
+        <option value="GB|0|イギリス|ロンドン">イギリス（ロンドン）</option>
+        <option value="FR|1|フランス|パリ">フランス（パリ）</option>
+        <option value="DE|1|ドイツ|ベルリン">ドイツ（ベルリン）</option>
+        <option value="IT|1|イタリア|ローマ">イタリア（ローマ）</option>
+        <option value="ES|1|スペイン|マドリード">スペイン（マドリード）</option>
+        <option value="PT|0|ポルトガル|リスボン">ポルトガル（リスボン）</option>
+        <option value="AU|10|オーストラリア|キャンベラ">オーストラリア（キャンベラ）</option>
+        <option value="NZ|12|ニュージーランド|ウェリントン">ニュージーランド（ウェリントン）</option>
+        <option value="BR|-3|ブラジル|ブラジリア">ブラジル（ブラジリア）</option>
+        <option value="CO|-5|コロンビア|ボゴタ">コロンビア（ボゴタ）</option>
+        <option value="ET|3|エチオピア|アディスアベバ">エチオピア（アディスアベバ）</option>
+        <option value="YE|3|イエメン|サヌア">イエメン（サヌア）</option>
+        <option value="ID|7|インドネシア|ジャカルタ">インドネシア（ジャカルタ）</option>
+        <option value="IN|5.5|インド|ニューデリー">インド（ニューデリー）</option>
+        <option value="TH|7|タイ|バンコク">タイ（バンコク）</option>
+        <option value="SG|8|シンガポール|シンガポール">シンガポール</option>
+      </select>
+    </div>
+  </div>
+  <button id="go">今日のコーヒーを占う</button>
+  <p class="note">出生時刻は現地正午固定、ハウスなし。同じ入力・同じ日なら同じ結果になります。同じ入力・同じ日なら同じ結果になります。</p>
+</section>
+
+<div id="error" class="status hidden"></div>
+
+<main id="result" class="hidden">
+  <section class="card">
+    <div class="result-head">
+      <div><div class="eyebrow" id="dateLabel"></div><h2 class="title" id="headline"></h2></div>
+      <div class="badge" id="dominantBadge"></div>
+    </div>
+    <p class="story" id="story"></p>
+    <div class="index"><strong>☀ コーヒー日和</strong><span class="stars" id="coffeeStars"></span><span id="coffeeIndex"></span></div>
+    <div class="tags" id="aspectTags"></div>
+  </section>
+
+  <section class="card">
+    <div class="section-title">TODAY'S CUP</div>
+    <div class="grid">
+      <div class="item"><div class="icon">🌍</div><small>おすすめ産地</small><strong id="origin"></strong></div>
+      <div class="item"><div class="icon">🔥</div><small>焙煎度</small><strong id="roast"></strong></div>
+      <div class="item"><div class="icon">☕</div><small>コーヒースタイル</small><strong id="style"></strong></div>
+      <div class="item"><div class="icon">🌙</div><small>おすすめシーン</small><strong id="scene"></strong></div>
+      <div class="item"><div class="icon">☿</div><small>つながり方</small><strong id="connection"></strong></div>
+      <div class="item"><div class="icon">☀️</div><small>今日の空気感</small><strong id="theme"></strong></div>
+    </div>
+  </section>
+
+  <section class="card"><div class="section-title">PAIRING</div><p class="tip" id="pairing"></p></section>
+  <section class="card"><div class="section-title">COFFEE TIP</div><p class="tip" id="tip"></p></section>
+  <section class="card"><div class="section-title">PLANETARY NOTES</div><div class="planet-list" id="planetList"></div></section>
+</main>
+
+<div class="footer">
+  天体位置はブラウザ内の簡易天文計算で求めています。高精度の占星術ソフトとは数度程度ずれる場合があります。占いは娯楽としてお楽しみください。
+</div>
+</div>
+
+<script>
+const signNames=["牡羊座","牡牛座","双子座","蟹座","獅子座","乙女座","天秤座","蠍座","射手座","山羊座","水瓶座","魚座"];
+const symbol={"牡羊座":"♈","牡牛座":"♉","双子座":"♊","蟹座":"♋","獅子座":"♌","乙女座":"♍","天秤座":"♎","蠍座":"♏","射手座":"♐","山羊座":"♑","水瓶座":"♒","魚座":"♓"};
+const coffee={
+"牡羊座":{origin:"ケニア",style:"エスプレッソ",scene:"一日のスタート",connection:"新しい人と話す",theme:"前向き"},
+"牡牛座":{origin:"ブラジル",style:"ハンドドリップ",scene:"朝食やブランチ",connection:"お気に入りの一杯をゆっくり味わう",theme:"ゆったり"},
+"双子座":{origin:"エチオピア",style:"カフェラテ",scene:"午前の休憩",connection:"友人とおしゃべり",theme:"軽やか"},
+"蟹座":{origin:"グアテマラ",style:"カフェオレ",scene:"自宅でくつろぐ時間",connection:"家族や大切な人と過ごす",theme:"穏やか"},
+"獅子座":{origin:"パナマ",style:"ロングブラック",scene:"カフェで過ごす時間",connection:"誰かにコーヒーを淹れる",theme:"華やか"},
+"乙女座":{origin:"コロンビア",style:"レシピを意識したハンドドリップ",scene:"集中したい時間",connection:"コーヒーについて学ぶ",theme:"丁寧"},
+"天秤座":{origin:"コスタリカ",style:"フラットホワイト",scene:"午後のティータイム",connection:"パートナーや気の合う人と楽しむ",theme:"心地よく"},
+"蠍座":{origin:"インドネシア",style:"リストレット",scene:"一人で向き合う時間",connection:"一対一で深く語る",theme:"深く"},
+"射手座":{origin:"タンザニア",style:"コールドブリュー",scene:"屋外",connection:"趣味仲間と語る",theme:"自由に"},
+"山羊座":{origin:"ペルー",style:"アメリカーノ",scene:"仕事終わり",connection:"仕事仲間や先輩と話す",theme:"着実に"},
+"水瓶座":{origin:"ルワンダ",style:"エアロカーノ",scene:"新しい場所・新しい体験",connection:"SNSやオンラインで交流",theme:"新しく"},
+"魚座":{origin:"イエメン",style:"サイフォン",scene:"夜のリラックスタイム",connection:"自分自身と向き合う",theme:"優しく"}};
+const roastRanges={"ケニア":["浅煎り","中煎り"],"ブラジル":["中煎り","中深煎り"],"エチオピア":["浅煎り","中煎り"],"グアテマラ":["中煎り","中深煎り"],"パナマ":["浅煎り","中煎り"],"コロンビア":["中煎り","中深煎り"],"コスタリカ":["浅煎り","中煎り"],"インドネシア":["浅煎り","中煎り","中深煎り"],"タンザニア":["浅煎り","中煎り"],"ペルー":["中煎り"],"ルワンダ":["浅煎り","中煎り"],"イエメン":["浅煎り","中煎り","中深煎り"]};
+const pairings={"ケニア":["ベリータルト","オレンジピール","カカオニブ"],"ブラジル":["チョコレート","ナッツ","フィナンシェ"],"エチオピア":["レモンケーキ","ドライフルーツ","フルーツゼリー"],"グアテマラ":["バタークッキー","シナモンロール","キャラメル菓子"],"パナマ":["フルーツタルト","マカロン","上品な焼き菓子"],"コロンビア":["カステラ","ミルクチョコ","バタークッキー"],"コスタリカ":["アップルパイ","ナッツ菓子","はちみつトースト"],"インドネシア":["ダークチョコ","黒糖菓子","スパイスクッキー"],"タンザニア":["ベリー系の菓子","オレンジケーキ","チョコスコーン"],"ペルー":["カカオ菓子","素朴なビスケット","ナッツ"],"ルワンダ":["赤い果実のタルト","紅茶クッキー","ヨーグルト菓子"],"イエメン":["デーツ","スパイスケーキ","ビターチョコ"]};
+const tips={"エスプレッソ":"エスプレッソは、細かく挽いた豆に圧力をかけ、短時間で凝縮して抽出するスタイルです。","ハンドドリップ":"ハンドドリップは、お湯の注ぎ方で香り・甘さ・濃度を調整できます。","カフェラテ":"カフェラテは、エスプレッソにスチームミルクを合わせる飲み物です。","カフェオレ":"カフェオレは、ドリップコーヒーと温めたミルクを合わせるのが一般的です。","ロングブラック":"ロングブラックは、お湯にエスプレッソを注ぎ、香りやクレマを残しやすくしたスタイルです。","レシピを意識したハンドドリップ":"湯温・挽き目・注ぐ回数を一つずつ変えると、味の変化を理解しやすくなります。","フラットホワイト":"フラットホワイトは、きめ細かなミルクとエスプレッソ感のバランスを楽しむ飲み物です。","リストレット":"リストレットは、通常のエスプレッソより少ない抽出量で仕上げる、濃厚で甘さを感じやすいスタイルです。","コールドブリュー":"コールドブリューは、水で長時間抽出することで角の取れた口当たりになりやすい方法です。","アメリカーノ":"アメリカーノは、エスプレッソをお湯でのばす飲み方です。","エアロカーノ":"エアロカーノは、エスプレッソと冷水などをスチームで泡立て、急冷して作る軽やかな飲み物です。","サイフォン":"サイフォンは、蒸気圧と気圧差を利用して抽出する、香りの演出も楽しめる方法です。"};
+const outerMeaning={"木星":"楽しみを広げる","土星":"少し絞って丁寧にする","天王星":"普段と違う方向へ動かす","海王星":"香りや余韻への没入を深める","冥王星":"とっておきの体験へ変える"};
+const aspectDefs=[["コンジャンクション",0,5],["セクスタイル",60,3],["スクエア",90,4],["トライン",120,4],["オポジション",180,5]];
+
+function mod360(x){x%=360;return x<0?x+360:x}
+function rad(x){return x*Math.PI/180}
+function deg(x){return x*180/Math.PI}
+function jd(date){return date.getTime()/86400000+2440587.5}
+function days2000(date){return jd(date)-2451543.5}
+function solveE(M,e){let E=M+e*180/Math.PI*Math.sin(rad(M))*(1+e*Math.cos(rad(M)));for(let i=0;i<6;i++)E=E-(E-e*deg(Math.sin(rad(E)))-M)/(1-e*Math.cos(rad(E)));return E}
+function heliocentric(name,d){
+ const el={
+ Mercury:[48.3313,3.24587E-5,7.0047,5.00E-8,29.1241,1.01444E-5,0.387098,0,0.205635,5.59E-10,168.6562,4.0923344368],
+ Venus:[76.6799,2.46590E-5,3.3946,2.75E-8,54.8910,1.38374E-5,0.723330,0,0.006773,-1.302E-9,48.0052,1.6021302244],
+ Earth:[0,0,0,0,282.9404,4.70935E-5,1.000000,0,0.016709,-1.151E-9,356.0470,0.9856002585],
+ Mars:[49.5574,2.11081E-5,1.8497,-1.78E-8,286.5016,2.92961E-5,1.523688,0,0.093405,2.516E-9,18.6021,0.5240207766],
+ Jupiter:[100.4542,2.76854E-5,1.3030,-1.557E-7,273.8777,1.64505E-5,5.20256,0,0.048498,4.469E-9,19.8950,0.0830853001],
+ Saturn:[113.6634,2.38980E-5,2.4886,-1.081E-7,339.3939,2.97661E-5,9.55475,0,0.055546,-9.499E-9,316.9670,0.0334442282],
+ Uranus:[74.0005,1.3978E-5,0.7733,1.9E-8,96.6612,3.0565E-5,19.18171,-1.55E-8,0.047318,7.45E-9,142.5905,0.011725806],
+ Neptune:[131.7806,3.0173E-5,1.7700,-2.55E-7,272.8461,-6.027E-6,30.05826,3.313E-8,0.008606,2.15E-9,260.2471,0.005995147],
+ Pluto:[110.30347,0,17.14175,0,113.76329,0,39.48168677,0,0.24880766,0,14.53,0.00396]
+ }[name];
+ const N=el[0]+el[1]*d,i=el[2]+el[3]*d,w=el[4]+el[5]*d,a=el[6]+el[7]*d,e=el[8]+el[9]*d,M=mod360(el[10]+el[11]*d);
+ const E=solveE(M,e),xv=a*(Math.cos(rad(E))-e),yv=a*Math.sqrt(1-e*e)*Math.sin(rad(E)),v=deg(Math.atan2(yv,xv)),r=Math.sqrt(xv*xv+yv*yv);
+ const xh=r*(Math.cos(rad(N))*Math.cos(rad(v+w))-Math.sin(rad(N))*Math.sin(rad(v+w))*Math.cos(rad(i)));
+ const yh=r*(Math.sin(rad(N))*Math.cos(rad(v+w))+Math.cos(rad(N))*Math.sin(rad(v+w))*Math.cos(rad(i)));
+ const zh=r*Math.sin(rad(v+w))*Math.sin(rad(i));
+ return {x:xh,y:yh,z:zh};
+}
+function sunMoon(date){
+ const d=days2000(date),w=282.9404+4.70935E-5*d,e=0.016709-1.151E-9*d,M=mod360(356.0470+0.9856002585*d);
+ const E=solveE(M,e),x=Math.cos(rad(E))-e,y=Math.sqrt(1-e*e)*Math.sin(rad(E)),v=deg(Math.atan2(y,x)),lon=mod360(v+w);
+ const sun=mod360(lon+180);
+ const N=125.1228-0.0529538083*d,i=5.1454,wm=318.0634+0.1643573223*d,am=60.2666,em=0.054900,Mm=mod360(115.3654+13.0649929509*d);
+ const Em=solveE(Mm,em),xv=am*(Math.cos(rad(Em))-em),yv=am*Math.sqrt(1-em*em)*Math.sin(rad(Em)),vm=deg(Math.atan2(yv,xv)),rm=Math.sqrt(xv*xv+yv*yv);
+ let xh=rm*(Math.cos(rad(N))*Math.cos(rad(vm+wm))-Math.sin(rad(N))*Math.sin(rad(vm+wm))*Math.cos(rad(i)));
+ let yh=rm*(Math.sin(rad(N))*Math.cos(rad(vm+wm))+Math.cos(rad(N))*Math.sin(rad(vm+wm))*Math.cos(rad(i)));
+ let moon=mod360(deg(Math.atan2(yh,xh)));
+ return {Sun:sun,Moon:moon};
+}
+function planetLon(name,date){
+ const d=days2000(date),sm=sunMoon(date);
+ if(name==="Sun")return sm.Sun;if(name==="Moon")return sm.Moon;
+ const p=heliocentric(name,d),e=heliocentric("Earth",d);
+ return mod360(deg(Math.atan2(p.y-e.y,p.x-e.x)));
+}
+function signFromLon(lon){return signNames[Math.floor(mod360(lon)/30)]}
+function angularDistance(a,b){let d=Math.abs(a-b)%360;return d>180?360-d:d}
+function strongestAspect(transLon,natalMap,targetNames){
+ let best={score:0,orb:99,name:"なし",target:""};
+ for(const target of targetNames){
+  const d=angularDistance(transLon,natalMap[target]);
+  for(const [name,angle,weight] of aspectDefs){
+   const orb=Math.abs(d-angle),maxOrb=(angle===0||angle===180)?8:6;
+   if(orb<=maxOrb){
+    const score=Math.max(1,Math.round(weight*Math.max(0,1-orb/maxOrb)));
+    if(score>best.score||(score===best.score&&orb<best.orb))best={score,orb,name,target};
+   }
+  }
+ }
+ return best;
+}
+function localNoonUtc(dateStr,offset){const [y,m,d]=dateStr.split("-").map(Number);return new Date(Date.UTC(y,m-1,d,12-offset))}
+function stableIndex(text,max){let h=2166136261;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0)%max}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+function calculate(){
+ const birth=document.getElementById("birth").value;
+ if(!birth){alert("生年月日を入力してください");return}
+ try{
+  const [code,offsetStr,countryName,capital]=document.getElementById("country").value.split("|");
+  const offset=Number(offsetStr),birthDate=localNoonUtc(birth,offset);
+  const now=new Date(),today=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),3));
+  const bodies=[["太陽","Sun"],["月","Moon"],["水星","Mercury"],["金星","Venus"],["火星","Mars"],["木星","Jupiter"],["土星","Saturn"],["天王星","Uranus"],["海王星","Neptune"],["冥王星","Pluto"]];
+  const natal={},transit={};
+  bodies.forEach(([jp,en])=>{natal[jp]=planetLon(en,birthDate);transit[jp]=planetLon(en,today)});
+  const inner=["太陽","月","水星","金星","火星"],aspects={};
+  bodies.forEach(([jp])=>aspects[jp]=strongestAspect(transit[jp],natal,inner));
+  const signs={};inner.forEach(n=>signs[n]=signFromLon(transit[n]));
+  const sun=coffee[signs["太陽"]],moon=coffee[signs["月"]],mercury=coffee[signs["水星"]],venus=coffee[signs["金星"]],mars=coffee[signs["火星"]];
+  const origin=venus.origin,range=roastRanges[origin],rs=aspects["金星"].score,ri=Math.min(range.length-1,Math.floor((rs/5)*range.length)),roast=range[ri];
+  const outer=["木星","土星","天王星","海王星","冥王星"].map(n=>({name:n,...aspects[n]})).sort((a,b)=>b.score-a.score),dom=outer[0];
+  const modifier=dom.score?outerMeaning[dom.name]:"今日の流れを自然に受け取る";
+  const ci=Math.max(1,Math.min(5,Math.round((aspects["太陽"].score+aspects["金星"].score+aspects["火星"].score+Math.max(1,dom.score))/4)));
+  const dayKey=today.toISOString().slice(0,10),pair=pairings[origin][stableIndex(birth+code+dayKey+origin,pairings[origin].length)];
+  let rare="";
+  if(dom.name==="冥王星"&&dom.score>=4){rare=" とっておきの豆を持っているなら、今日は開ける候補日。手元になければ、いつか飲みたい特別な一杯を探してみるのもよさそうです。";if(stableIndex(birth+dayKey+"南米屋",183)===0)rare+=" 星々のごく珍しい巡りが、幻の一杯「南米屋」の気配も示しています。";}
+  document.getElementById("dateLabel").textContent=`${dayKey.replaceAll("-",".")} / ${countryName}・${capital}基準`;
+  document.getElementById("headline").textContent=`${origin}を、${mars.style}で。`;
+  document.getElementById("dominantBadge").textContent=dom.score?`${dom.name} ${dom.score}/5`:"穏やかな星回り";
+  document.getElementById("story").textContent=`今日は「${sun.theme}」が全体の空気感。${moon.scene}に、${origin}の${roast}を${mars.style}で楽しむ流れです。${mercury.connection}ことを意識しながら、${modifier}と、今日の星の配置が自然につながります。${rare}`;
+  document.getElementById("coffeeStars").textContent="★".repeat(ci)+"☆".repeat(5-ci);document.getElementById("coffeeIndex").textContent=`${ci}/5`;
+  document.getElementById("origin").textContent=`${origin}（金星 ${symbol[signs["金星"]]}${signs["金星"]}）`;
+  document.getElementById("roast").textContent=`${roast}（金星アスペクト ${rs}/5）`;
+  document.getElementById("style").textContent=`${mars.style}（火星 ${symbol[signs["火星"]]}${signs["火星"]}）`;
+  document.getElementById("scene").textContent=`${moon.scene}（月 ${symbol[signs["月"]]}${signs["月"]}）`;
+  document.getElementById("connection").textContent=`${mercury.connection}（水星 ${symbol[signs["水星"]]}${signs["水星"]}）`;
+  document.getElementById("theme").textContent=`${sun.theme}（太陽 ${symbol[signs["太陽"]]}${signs["太陽"]}）`;
+  document.getElementById("pairing").textContent=`今日のお供は「${pair}」。${origin}の${roast}に合わせた別枠の提案です。`;
+  document.getElementById("tip").textContent=tips[mars.style];
+  const tags=Object.entries(aspects).filter(([,a])=>a.score>0).sort((a,b)=>b[1].score-a[1].score).slice(0,5);
+  document.getElementById("aspectTags").innerHTML=tags.map(([p,a])=>`<span class="tag">${esc(p)}：${esc(a.name)}／${esc(a.target)} ${a.score}/5</span>`).join("");
+  document.getElementById("planetList").innerHTML=bodies.map(([jp])=>{const s=signFromLon(transit[jp]),a=aspects[jp];return `<div class="planet"><div class="pname">${jp}</div><div class="detail">${symbol[s]} ${s}${a.score?` ・ ${a.target}と${a.name}`:" ・ 強い主要アスペクトなし"}</div><div class="score">${a.score}/5</div></div>`}).join("");
+  document.getElementById("error").classList.add("hidden");document.getElementById("result").classList.remove("hidden");
+  localStorage.setItem("coffeeBirth",birth);localStorage.setItem("coffeeCountry",document.getElementById("country").value);
+  setTimeout(()=>document.getElementById("result").scrollIntoView({behavior:"smooth",block:"start"}),50);
+ }catch(e){document.getElementById("error").textContent="計算エラー："+e.message;document.getElementById("error").classList.remove("hidden")}
+}
+document.getElementById("go").addEventListener("click",calculate);
+const sb=localStorage.getItem("coffeeBirth"),sc=localStorage.getItem("coffeeCountry");
+if(sb)document.getElementById("birth").value=sb;if(sc)document.getElementById("country").value=sc;
+</script>
+</body></html>
