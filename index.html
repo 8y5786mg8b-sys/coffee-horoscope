@@ -40,9 +40,9 @@ button{margin-top:14px;border:0;background:linear-gradient(135deg,var(--accent),
 <body>
 <div class="wrap">
 <header class="hero">
-  <div class="eyebrow">NATAL × TODAY'S TRANSIT · v3</div>
+  <div class="eyebrow">NATAL × TODAY'S TRANSIT · v4</div>
   <h1>Coffee<br>Horoscope</h1>
-  <p class="lead">生まれた日の惑星配置と今日の星の動きを重ね、今日のあなたに似合うコーヒーを提案します。</p>
+  <p class="lead">ホロスコープをもとに、今日のコーヒーをご提案します。☕</p>
 </header>
 
 <section class="card">
@@ -94,7 +94,7 @@ button{margin-top:14px;border:0;background:linear-gradient(135deg,var(--accent),
     </div>
     <p class="story" id="story"></p>
     <div class="index"><strong>☀ コーヒー日和</strong><span class="stars" id="coffeeStars"></span><span id="coffeeIndex"></span></div>
-    <div class="tags" id="aspectTags"></div>
+    
   </section>
 
   <section class="card">
@@ -102,16 +102,17 @@ button{margin-top:14px;border:0;background:linear-gradient(135deg,var(--accent),
     <div class="grid">
       <div class="item"><div class="icon">🌍</div><small>おすすめ産地</small><strong id="origin"></strong></div>
       <div class="item"><div class="icon">🔥</div><small>焙煎度</small><strong id="roast"></strong></div>
-      <div class="item"><div class="icon">☕</div><small>コーヒースタイル</small><strong id="style"></strong></div>
+      <div class="item"><div class="icon">☕</div><small>抽出方法</small><strong id="style"></strong></div>
       <div class="item"><div class="icon">🌙</div><small>おすすめシーン</small><strong id="scene"></strong></div>
-      <div class="item"><div class="icon">☿</div><small>つながり方</small><strong id="connection"></strong></div>
-      <div class="item"><div class="icon">☀️</div><small>今日の空気感</small><strong id="theme"></strong></div>
+      <div class="item"><div class="icon">👥</div><small>誰と飲む？</small><strong id="connection"></strong></div>
+      <div class="item"><div class="icon">✨</div><small>今日のテーマ</small><strong id="theme"></strong></div>
     </div>
   </section>
+  <section class="card"><div class="section-title">TODAY'S MESSAGE</div><p class="tip" id="todayMessage"></p></section>
 
   <section class="card"><div class="section-title">PAIRING</div><p class="tip" id="pairing"></p></section>
   <section class="card"><div class="section-title">COFFEE TIP</div><p class="tip" id="tip"></p></section>
-  <section class="card"><div class="section-title">PLANETARY NOTES</div><div class="planet-list" id="planetList"></div></section>
+  
 </main>
 
 <div class="footer">
@@ -139,6 +140,42 @@ const roastRanges={"ケニア":["浅煎り","中煎り"],"ブラジル":["中煎
 const pairings={"ケニア":["ベリータルト","オレンジピール","カカオニブ"],"ブラジル":["チョコレート","ナッツ","フィナンシェ"],"エチオピア":["レモンケーキ","ドライフルーツ","フルーツゼリー"],"グアテマラ":["バタークッキー","シナモンロール","キャラメル菓子"],"パナマ":["フルーツタルト","マカロン","上品な焼き菓子"],"コロンビア":["カステラ","ミルクチョコ","バタークッキー"],"コスタリカ":["アップルパイ","ナッツ菓子","はちみつトースト"],"インドネシア":["ダークチョコ","黒糖菓子","スパイスクッキー"],"タンザニア":["ベリー系の菓子","オレンジケーキ","チョコスコーン"],"ペルー":["カカオ菓子","素朴なビスケット","ナッツ"],"ルワンダ":["赤い果実のタルト","紅茶クッキー","ヨーグルト菓子"],"イエメン":["デーツ","スパイスケーキ","ビターチョコ"]};
 const tips={"エスプレッソ":"エスプレッソは、細かく挽いた豆に圧力をかけ、短時間で凝縮して抽出するスタイルです。","ハンドドリップ":"ハンドドリップは、お湯の注ぎ方で香り・甘さ・濃度を調整できます。","カフェラテ":"カフェラテは、エスプレッソにスチームミルクを合わせる飲み物です。","カフェオレ":"カフェオレは、ドリップコーヒーと温めたミルクを合わせるのが一般的です。","ロングブラック":"ロングブラックは、お湯にエスプレッソを注ぎ、香りやクレマを残しやすくしたスタイルです。","レシピを意識したハンドドリップ":"湯温・挽き目・注ぐ回数を一つずつ変えると、味の変化を理解しやすくなります。","フラットホワイト":"フラットホワイトは、きめ細かなミルクとエスプレッソ感のバランスを楽しむ飲み物です。","リストレット":"リストレットは、通常のエスプレッソより少ない抽出量で仕上げる、濃厚で甘さを感じやすいスタイルです。","コールドブリュー":"コールドブリューは、水で長時間抽出することで角の取れた口当たりになりやすい方法です。","アメリカーノ":"アメリカーノは、エスプレッソをお湯でのばす飲み方です。","エアロカーノ":"エアロカーノは、エスプレッソと冷水などをスチームで泡立て、急冷して作る軽やかな飲み物です。","サイフォン":"サイフォンは、蒸気圧と気圧差を利用して抽出する、香りの演出も楽しめる方法です。"};
 const outerMeaning={"木星":"楽しみを広げる","土星":"少し絞って丁寧にする","天王星":"普段と違う方向へ動かす","海王星":"香りや余韻への没入を深める","冥王星":"とっておきの体験へ変える"};
+
+const marketByCountry={JP:"east",KR:"east",CN:"east",TW:"east",HK:"east",SG:"east",ID:"east",TH:"east",US:"north",CA:"north",GB:"europe",FR:"europe",DE:"europe",IT:"europe",ES:"europe",PT:"europe",AU:"oceania",NZ:"oceania",BR:"latin",CO:"latin",ET:"mea",YE:"mea",IN:"mea"};
+const brewCatalog={
+ east:[
+  {id:"v60",label:"ペーパードリップ（V60）",tags:["clear","floral","classic"]},
+  {id:"kalita",label:"ペーパードリップ（Kalita）",tags:["balanced","sweet","classic"]},
+  {id:"origami",label:"ペーパードリップ（ORIGAMI）",tags:["floral","adventure","clear"]},
+  {id:"switch",label:"ペーパードリップ（Switch）",tags:["balanced","soft","adventure"]},
+  {id:"nel",label:"ネルドリップ",tags:["deep","sweet","classic"]},
+  {id:"iced",label:"アイスコーヒー",tags:["cool","clear","social"]},
+  {id:"cold",label:"水出しコーヒー",tags:["cool","soft","calm"]},
+  {id:"espresso",label:"エスプレッソ",tags:["strong","deep","active"]},
+  {id:"americano",label:"アメリカーノ",tags:["clear","active","social"]},
+  {id:"cappuccino",label:"カプチーノ",tags:["milk","soft","social"]},
+  {id:"latte",label:"カフェラテ",tags:["milk","soft","calm"]}
+ ],
+ europe:[
+  {id:"espresso",label:"エスプレッソ",tags:["strong","classic","active"]},{id:"cappuccino",label:"カプチーノ",tags:["milk","classic","social"]},{id:"latte",label:"カフェラテ",tags:["milk","soft","social"]},{id:"macchiato",label:"マキアート",tags:["strong","milk","classic"]},{id:"americano",label:"アメリカーノ",tags:["clear","active","social"]},{id:"v60",label:"ペーパードリップ（V60）",tags:["clear","floral","adventure"]},{id:"origami",label:"ペーパードリップ（ORIGAMI）",tags:["floral","adventure","clear"]},{id:"french",label:"フレンチプレス",tags:["deep","sweet","classic"]},{id:"cold",label:"コールドブリュー",tags:["cool","soft","adventure"]}
+ ],
+ north:[
+  {id:"drip",label:"ドリップコーヒー",tags:["classic","balanced","social"]},{id:"v60",label:"ペーパードリップ（V60）",tags:["clear","floral","adventure"]},{id:"origami",label:"ペーパードリップ（ORIGAMI）",tags:["floral","adventure","clear"]},{id:"espresso",label:"エスプレッソ",tags:["strong","active","deep"]},{id:"americano",label:"アメリカーノ",tags:["clear","active","social"]},{id:"latte",label:"カフェラテ",tags:["milk","soft","social"]},{id:"cappuccino",label:"カプチーノ",tags:["milk","classic","social"]},{id:"cold",label:"コールドブリュー",tags:["cool","soft","adventure"]},{id:"french",label:"フレンチプレス",tags:["deep","sweet","classic"]},{id:"iced",label:"アイスコーヒー",tags:["cool","clear","social"]}
+ ],
+ oceania:[
+  {id:"flatwhite",label:"フラットホワイト",tags:["milk","strong","social"]},{id:"longblack",label:"ロングブラック",tags:["strong","clear","classic"]},{id:"espresso",label:"エスプレッソ",tags:["strong","active","deep"]},{id:"cappuccino",label:"カプチーノ",tags:["milk","classic","social"]},{id:"latte",label:"カフェラテ",tags:["milk","soft","social"]},{id:"v60",label:"ペーパードリップ（V60）",tags:["clear","floral","adventure"]},{id:"origami",label:"ペーパードリップ（ORIGAMI）",tags:["floral","adventure","clear"]},{id:"cold",label:"コールドブリュー",tags:["cool","soft","adventure"]},{id:"batch",label:"バッチブリュー",tags:["balanced","social","classic"]}
+ ],
+ latin:[
+  {id:"espresso",label:"エスプレッソ",tags:["strong","classic","active"]},{id:"americano",label:"アメリカーノ",tags:["clear","social","active"]},{id:"latte",label:"カフェラテ",tags:["milk","soft","social"]},{id:"cappuccino",label:"カプチーノ",tags:["milk","classic","social"]},{id:"v60",label:"ペーパードリップ（V60）",tags:["clear","floral","adventure"]},{id:"kalita",label:"ペーパードリップ（Kalita）",tags:["balanced","sweet","classic"]},{id:"origami",label:"ペーパードリップ（ORIGAMI）",tags:["floral","adventure","clear"]},{id:"french",label:"フレンチプレス",tags:["deep","sweet","classic"]},{id:"cold",label:"コールドブリュー",tags:["cool","soft","adventure"]}
+ ],
+ mea:[
+  {id:"espresso",label:"エスプレッソ",tags:["strong","active","deep"]},{id:"americano",label:"アメリカーノ",tags:["clear","social","active"]},{id:"cappuccino",label:"カプチーノ",tags:["milk","classic","social"]},{id:"latte",label:"カフェラテ",tags:["milk","soft","social"]},{id:"v60",label:"ペーパードリップ（V60）",tags:["clear","floral","adventure"]},{id:"origami",label:"ペーパードリップ（ORIGAMI）",tags:["floral","adventure","clear"]},{id:"kalita",label:"ペーパードリップ（Kalita）",tags:["balanced","sweet","classic"]},{id:"french",label:"フレンチプレス",tags:["deep","sweet","classic"]},{id:"cold",label:"コールドブリュー",tags:["cool","soft","adventure"]}
+ ]
+};
+const originOptions=[
+ {name:"ケニア",tags:["bright","floral","adventure"]},{name:"ブラジル",tags:["sweet","deep","classic"]},{name:"エチオピア",tags:["floral","bright","adventure"]},{name:"グアテマラ",tags:["balanced","sweet","classic"]},{name:"パナマ",tags:["floral","rare","bright"]},{name:"コロンビア",tags:["balanced","sweet","social"]},{name:"コスタリカ",tags:["bright","sweet","clear"]},{name:"インドネシア",tags:["deep","spice","classic"]},{name:"タンザニア",tags:["bright","berry","adventure"]},{name:"ペルー",tags:["balanced","soft","classic"]},{name:"ルワンダ",tags:["bright","floral","adventure"]},{name:"イエメン",tags:["deep","rare","spice"]}
+];
+const todayMessages={active:"少し勢いをつけて、迷わず一杯を選ぶと流れに乗れそうです。",calm:"今日は急がず、香りと余韻をゆっくり楽しむのがよさそうです。",social:"誰かとコーヒーを囲むことで、思いがけない会話が生まれそうです。",adventure:"いつもと少し違う一杯を選ぶと、新しい発見につながりそうです。",classic:"慣れた飲み方を丁寧に楽しむと、落ち着いた時間になりそうです。",floral:"香りを意識して、最初のひと口をゆっくり味わってみてください。",deep:"今日はコクや余韻を楽しむ一杯が似合いそうです。",clear:"すっきりした後味の一杯で、気分を切り替えてみましょう。",soft:"やわらかな口当たりの一杯が、今日の気分に寄り添いそうです。"};
 const aspectDefs=[["コンジャンクション",0,5],["セクスタイル",60,3],["スクエア",90,4],["トライン",120,4],["オポジション",180,5]];
 
 function mod360(x){x%=360;return x<0?x+360:x}
@@ -203,146 +240,14 @@ function localNoonUtc(dateStr,offset){const [y,m,d]=dateStr.split("-").map(Numbe
 function stableIndex(text,max){let h=2166136261;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0)%max}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
-function buildCandidate(birth,countryValue,hour){
- const [code,offsetStr,countryName,capital]=countryValue.split("|");
- const offset=Number(offsetStr);
- const [y,m,d]=birth.split("-").map(Number);
- const birthDate=new Date(Date.UTC(y,m-1,d,hour-offset,0,0));
- const now=new Date();
- const today=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),3));
- const bodies=[["太陽","Sun"],["月","Moon"],["水星","Mercury"],["金星","Venus"],["火星","Mars"],["木星","Jupiter"],["土星","Saturn"],["天王星","Uranus"],["海王星","Neptune"],["冥王星","Pluto"]];
- const natal={},transit={};
- bodies.forEach(([jp,en])=>{natal[jp]=planetLon(en,birthDate);transit[jp]=planetLon(en,today)});
- const inner=["太陽","月","水星","金星","火星"];
- const aspects={};
- bodies.forEach(([jp])=>aspects[jp]=strongestAspect(transit[jp],natal,inner));
+function scoreTags(tags,w){return tags.reduce((s,t)=>s+(w[t]||0),0)}
+function weightsFromAspects(a){const w={};const add=(t,v)=>w[t]=(w[t]||0)+v;const S=n=>a[n].score;add("active",S("火星")*2+S("太陽"));add("strong",S("火星")*2+S("冥王星"));add("social",S("水星")*2+S("木星"));add("milk",S("月")+S("木星"));add("classic",S("土星")*2+S("太陽"));add("adventure",S("天王星")*2+S("木星"));add("floral",S("金星")*2+S("海王星"));add("bright",S("金星")+S("太陽")+S("天王星"));add("deep",S("冥王星")*2+S("土星"));add("sweet",S("金星")+S("木星")+S("月"));add("clear",S("水星")+S("太陽")+S("天王星"));add("soft",S("月")*2+S("海王星"));add("cool",S("月")+S("天王星"));add("balanced",S("土星")+S("水星")+S("金星"));add("rare",S("冥王星")*2+S("天王星"));add("spice",S("冥王星")+S("火星"));add("berry",S("金星")+S("天王星"));add("calm",S("月")+S("土星")+S("海王星"));return w}
+function choose(items,w,seed){return items.map((item,i)=>({item,score:scoreTags(item.tags||[],w)+stableIndex(seed+"|"+item.id+"|"+i,1000)/1000})).sort((a,b)=>b.score-a.score)[0].item}
+function chooseOrigin(base,w,seed){return originOptions.map((item,i)=>({item,score:scoreTags(item.tags,w)+(item.name===base?3:0)+stableIndex(seed+"|o|"+i,1000)/1000})).sort((a,b)=>b.score-a.score)[0].item.name}
+function chooseRoast(origin,w,seed){const rt={"浅煎り":["bright","floral","clear","adventure"],"中煎り":["balanced","sweet","social"],"中深煎り":["deep","sweet","classic"],"深煎り":["deep","strong","classic"]};return (roastRanges[origin]||["中煎り"]).map((r,i)=>({r,score:scoreTags(rt[r]||[],w)+stableIndex(seed+"|r|"+i,1000)/1000})).sort((a,b)=>b.score-a.score)[0].r}
+function buildCandidate(birth,countryValue,hour){const [code,offsetStr,countryName,capital]=countryValue.split("|");const offset=Number(offsetStr);const [y,m,d]=birth.split("-").map(Number);const birthDate=new Date(Date.UTC(y,m-1,d,hour-offset));const now=new Date(),today=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),3));const bodies=[["太陽","Sun"],["月","Moon"],["水星","Mercury"],["金星","Venus"],["火星","Mars"],["木星","Jupiter"],["土星","Saturn"],["天王星","Uranus"],["海王星","Neptune"],["冥王星","Pluto"]],natal={},transit={};bodies.forEach(([jp,en])=>{natal[jp]=planetLon(en,birthDate);transit[jp]=planetLon(en,today)});const inner=["太陽","月","水星","金星","火星"],aspects={};bodies.forEach(([jp])=>aspects[jp]=strongestAspect(transit[jp],natal,inner));const natalSigns={};inner.forEach(n=>natalSigns[n]=signFromLon(natal[n]));const sun=coffee[natalSigns["太陽"]],moon=coffee[natalSigns["月"]],mercury=coffee[natalSigns["水星"]],venus=coffee[natalSigns["金星"]];const w=weightsFromAspects(aspects),dayKey=today.toISOString().slice(0,10),seed=`${birth}|${code}|${dayKey}|${hour}`,origin=chooseOrigin(venus.origin,w,seed),roast=chooseRoast(origin,w,seed),market=marketByCountry[code]||"east",brew=choose(brewCatalog[market],w,seed+"|b"),tone=choose(Object.keys(todayMessages).map(id=>({id,tags:[id]})),w,seed+"|t").id,outer=["木星","土星","天王星","海王星","冥王星"].map(n=>({name:n,...aspects[n]})).sort((a,b)=>b.score-a.score),dominant=outer[0],coffeeIndex=Math.max(1,Math.min(5,Math.round((aspects["太陽"].score+aspects["月"].score+aspects["水星"].score+aspects["金星"].score+aspects["火星"].score+Math.max(1,dominant.score))/6))),candidateScore=Object.values(aspects).reduce((s,x)=>s+x.score,0)*10+Object.values(aspects).filter(x=>x.score>=3).length*7+scoreTags(brew.tags,w)+hour/6;return{hour,code,countryName,capital,today,bodies,transit,aspects,natalSigns,sun,moon,mercury,origin,roast,brew,tone,dominant,coffeeIndex,candidateScore}}
+function calculate(){const birth=document.getElementById("birth").value;if(!birth){alert("生年月日を入力してください");return}try{const countryValue=document.getElementById("country").value,c=[0,6,12,18].map(h=>buildCandidate(birth,countryValue,h)).sort((a,b)=>b.candidateScore-a.candidateScore)[0],dayKey=c.today.toISOString().slice(0,10),pair=pairings[c.origin][stableIndex(birth+c.code+dayKey+c.origin+c.hour,pairings[c.origin].length)];let rare="";if(c.dominant.name==="冥王星"&&c.dominant.score>=4)rare=" とっておきの豆を持っているなら、今日は開ける候補日です。";document.getElementById("dateLabel").textContent=`${dayKey.replaceAll("-",".")} / ${c.countryName}・${c.capital}基準`;document.getElementById("headline").textContent=`${c.origin}を、${c.brew.label}で。`;document.getElementById("dominantBadge").textContent=`コーヒー日和 ${c.coffeeIndex}/5`;document.getElementById("story").textContent=`今日は「${c.sun.theme}」が全体の空気感。${c.moon.scene}に、${c.origin}の${c.roast}を${c.brew.label}で楽しむ流れです。${c.mercury.connection}ことを意識すると、いつもの一杯が少し違って感じられそうです。${rare}`;document.getElementById("coffeeStars").textContent="★".repeat(c.coffeeIndex)+"☆".repeat(5-c.coffeeIndex);document.getElementById("coffeeIndex").textContent=`${c.coffeeIndex}/5`;document.getElementById("origin").textContent=c.origin;document.getElementById("roast").textContent=c.roast;document.getElementById("style").textContent=c.brew.label;document.getElementById("scene").textContent=c.moon.scene;document.getElementById("connection").textContent=c.mercury.connection;document.getElementById("theme").textContent=c.sun.theme;document.getElementById("todayMessage").textContent=todayMessages[c.tone];document.getElementById("pairing").textContent=`今日のお供は「${pair}」。${c.origin}の${c.roast}に合わせた提案です。`;const tips={v60:"透明感と香りを楽しみたい日に向くペーパードリップです。",kalita:"甘さとバランスをまとめやすいペーパードリップです。",origami:"華やかな香りや果実感を楽しみたい日に向きます。",switch:"浸漬と透過の両方を楽しめるペーパードリップです。",nel:"丸みのある口当たりとコクを楽しみたい日に向きます。",iced:"急冷すると香りを残しながら、すっきり仕上げやすくなります。",cold:"水でゆっくり抽出すると、やわらかな口当たりになりやすいです。",espresso:"短時間で凝縮した香りと味わいを楽しむスタイルです。",americano:"エスプレッソをお湯でのばし、香りを軽やかに楽しみます。",cappuccino:"エスプレッソとフォームミルクのバランスを楽しむ一杯です。",latte:"ミルクの甘さとエスプレッソの組み合わせを楽しみます。",macchiato:"エスプレッソに少量のミルクを加えるスタイルです。",french:"豆の油分やボディを感じやすい抽出方法です。",flatwhite:"きめ細かなミルクとしっかりしたエスプレッソ感を楽しみます。",longblack:"お湯にエスプレッソを注ぎ、香りを残しやすくした一杯です。",drip:"親しみやすく、日常的に楽しみやすいドリップコーヒーです。",batch:"まとまりのよい味を気軽に楽しめる抽出スタイルです。"};document.getElementById("tip").textContent=tips[c.brew.id]||"今日の気分に合わせて、無理なく楽しめる一杯を選んでみましょう。";document.getElementById("error").classList.add("hidden");document.getElementById("result").classList.remove("hidden");localStorage.setItem("coffeeBirth",birth);localStorage.setItem("coffeeCountry",countryValue);setTimeout(()=>document.getElementById("result").scrollIntoView({behavior:"smooth",block:"start"}),50)}catch(e){document.getElementById("error").textContent="計算エラー："+e.message;document.getElementById("error").classList.remove("hidden")}}
 
- const transitSigns={},natalSigns={};
- inner.forEach(n=>{
-  transitSigns[n]=signFromLon(transit[n]);
-  natalSigns[n]=signFromLon(natal[n]);
- });
-
- const sun=coffee[natalSigns["太陽"]],
-       moon=coffee[natalSigns["月"]],
-       mercury=coffee[natalSigns["水星"]],
-       venus=coffee[natalSigns["金星"]],
-       mars=coffee[natalSigns["火星"]];
-
- const origin=venus.origin;
- const range=roastRanges[origin];
- const roastStrength=aspects["金星"].score;
- const roastIndex=Math.min(range.length-1,Math.floor((roastStrength/5)*range.length));
- const roast=range[roastIndex];
-
- const outer=["木星","土星","天王星","海王星","冥王星"]
-  .map(n=>({name:n,...aspects[n]}))
-  .sort((a,b)=>b.score-a.score);
- const dominant=outer[0];
- const modifier=dominant.score
-  ? (outerMeaning[dominant.name]||"今日の流れに少し変化を加える")
-  : "今日の流れを自然に受け取る";
-
- const indexRaw=Math.round(
-  (aspects["太陽"].score+aspects["月"].score+aspects["水星"].score+
-   aspects["金星"].score+aspects["火星"].score+Math.max(1,dominant.score))/6
- );
- const coffeeIndex=Math.max(1,Math.min(5,indexRaw));
-
- // 4候補の中から「特徴が強く出る」ものを選ぶための内部スコア
- const aspectTotal=Object.values(aspects).reduce((sum,a)=>sum+a.score,0);
- const strongCount=Object.values(aspects).filter(a=>a.score>=3).length;
- const signVariety=new Set(Object.values(natalSigns)).size;
- const distinctBonus=
-  (natalSigns["金星"]!==natalSigns["火星"]?2:0)+
-  (natalSigns["月"]!==natalSigns["太陽"]?1:0)+
-  (natalSigns["水星"]!==natalSigns["太陽"]?1:0);
- const candidateScore=aspectTotal*10+strongCount*7+signVariety*2+distinctBonus+hour/6;
-
- return {
-  hour,code,countryName,capital,birthDate,today,bodies,natal,transit,inner,
-  aspects,transitSigns,natalSigns,sun,moon,mercury,venus,mars,origin,roast,
-  roastStrength,outer,dominant,modifier,coffeeIndex,candidateScore
- };
-}
-
-function calculate(){
- const birth=document.getElementById("birth").value;
- if(!birth){alert("生年月日を入力してください");return}
- try{
-  const countryValue=document.getElementById("country").value;
-  const candidates=[0,6,12,18].map(hour=>buildCandidate(birth,countryValue,hour));
-  candidates.sort((a,b)=>b.candidateScore-a.candidateScore);
-  const c=candidates[0];
-
-  const dayKey=c.today.toISOString().slice(0,10);
-  const pair=pairings[c.origin][stableIndex(
-   birth+c.code+dayKey+c.origin+c.hour,
-   pairings[c.origin].length
-  )];
-
-  let rare="";
-  if(c.dominant.name==="冥王星"&&c.dominant.score>=4){
-   rare=" とっておきの豆を持っているなら、今日は開ける候補日。手元になければ、いつか飲みたい特別な一杯を探してみるのもよさそうです。";
-   if(stableIndex(birth+dayKey+"南米屋"+c.hour,183)===0){
-    rare+=" 星々のごく珍しい巡りが、幻の一杯「南米屋」の気配も示しています。";
-   }
-  }
-
-  document.getElementById("dateLabel").textContent=
-   `${dayKey.replaceAll("-",".")} / ${c.countryName}・${c.capital}基準`;
-  document.getElementById("headline").textContent=
-   `${c.origin}を、${c.mars.style}で。`;
-  document.getElementById("dominantBadge").textContent=
-   c.dominant.score?`${c.dominant.name} ${c.dominant.score}/5`:"穏やかな星回り";
-
-  document.getElementById("story").textContent=
-   `今日は「${c.sun.theme}」が全体の空気感。${c.moon.scene}に、${c.origin}の${c.roast}を${c.mars.style}で楽しむ流れです。`+
-   `${c.mercury.connection}ことを意識すると、${c.modifier}流れになりそうです。${rare}`;
-
-  document.getElementById("coffeeStars").textContent=
-   "★".repeat(c.coffeeIndex)+"☆".repeat(5-c.coffeeIndex);
-  document.getElementById("coffeeIndex").textContent=`${c.coffeeIndex}/5`;
-  document.getElementById("origin").textContent=
-   `${c.origin}（出生金星 ${symbol[c.natalSigns["金星"]]}${c.natalSigns["金星"]}）`;
-  document.getElementById("roast").textContent=
-   `${c.roast}（金星アスペクト ${c.roastStrength}/5）`;
-  document.getElementById("style").textContent=
-   `${c.mars.style}（出生火星 ${symbol[c.natalSigns["火星"]]}${c.natalSigns["火星"]}）`;
-  document.getElementById("scene").textContent=
-   `${c.moon.scene}（出生月 ${symbol[c.natalSigns["月"]]}${c.natalSigns["月"]}）`;
-  document.getElementById("connection").textContent=
-   `${c.mercury.connection}（出生水星 ${symbol[c.natalSigns["水星"]]}${c.natalSigns["水星"]}）`;
-  document.getElementById("theme").textContent=
-   `${c.sun.theme}（出生太陽 ${symbol[c.natalSigns["太陽"]]}${c.natalSigns["太陽"]}）`;
-
-  document.getElementById("pairing").textContent=
-   `今日のお供は「${pair}」。${c.origin}の${c.roast}に合わせた別枠の提案です。`;
-  document.getElementById("tip").textContent=tips[c.mars.style];
-
-  const tags=Object.entries(c.aspects)
-   .filter(([,a])=>a.score>0)
-   .sort((a,b)=>b[1].score-a[1].score)
-   .slice(0,5);
-  document.getElementById("aspectTags").innerHTML=
-   tags.map(([p,a])=>`<span class="tag">${esc(p)}：${esc(a.name)}／${esc(a.target)} ${a.score}/5</span>`).join("");
-
-  document.getElementById("planetList").innerHTML=
-   c.bodies.map(([jp])=>{
-    const s=signFromLon(c.transit[jp]),a=c.aspects[jp];
-    return `<div class="planet"><div class="pname">${jp}</div><div class="detail">${symbol[s]} ${s}${a.score?` ・ ${a.target}と${a.name}`:" ・ 強い主要アスペクトなし"}</div><div class="score">${a.score}/5</div></div>`;
-   }).join("");
-
-  document.getElementById("error").classList.add("hidden");
-  document.getElementById("result").classList.remove("hidden");
-  localStorage.setItem("coffeeBirth",birth);
-  localStorage.setItem("coffeeCountry",countryValue);
-  setTimeout(()=>document.getElementById("result").scrollIntoView({behavior:"smooth",block:"start"}),50);
- }catch(e){
-  document.getElementById("error").textContent="計算エラー："+e.message;
-  document.getElementById("error").classList.remove("hidden");
- }
-}
 document.getElementById("go").addEventListener("click",calculate);
 const sb=localStorage.getItem("coffeeBirth"),sc=localStorage.getItem("coffeeCountry");
 if(sb)document.getElementById("birth").value=sb;if(sc)document.getElementById("country").value=sc;
