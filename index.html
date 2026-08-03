@@ -49,6 +49,21 @@ button{margin-top:14px;border:0;background:linear-gradient(135deg,var(--accent),
 .recipe-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
 .recipe-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:13px;padding:11px 14px;background:linear-gradient(135deg,var(--accent),#9a6542);color:#fff;font-size:.88rem;font-weight:800;box-shadow:0 7px 18px rgba(117,72,46,.18)}
 .recipe-link.secondary{background:#fff;color:var(--accent);border:1px solid var(--line);box-shadow:none}
+.week-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,42%);gap:0;padding:0;overflow:hidden}
+.week-copy{padding:24px;position:relative;z-index:2}
+.week-visual{position:relative;min-height:230px;background:#f7eadc;overflow:hidden}
+.week-visual .coffee-art{width:100%;height:100%;object-fit:cover;display:block}
+.week-visual .horoscope-mark{position:absolute;left:-30px;top:22px;width:78%;opacity:.12}
+.week-period{display:inline-block;margin-top:10px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.75);border:1px solid var(--line);font-size:.76rem;color:var(--muted);font-weight:700}
+.today-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.today-grid .item{min-height:130px;padding:17px}
+.today-grid .wide{grid-column:span 2;min-height:110px}
+.sweets-layout{display:grid;grid-template-columns:minmax(150px,34%) 1fr;gap:18px;align-items:center}
+.sweets-image-wrap{aspect-ratio:4/3;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#f7ede4}
+.sweets-image-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:640px){.week-card{grid-template-columns:1fr}.week-visual{min-height:185px}.today-grid{grid-template-columns:1fr 1fr}.sweets-layout{grid-template-columns:1fr}.sweets-image-wrap{aspect-ratio:16/9}}
+@media(max-width:420px){.today-grid{grid-template-columns:1fr}.today-grid .wide{grid-column:span 1}.today-grid .item{min-height:auto}}
+
 
 
 @media(max-width:570px){.wrap{padding:14px 10px 42px}.hero{padding:20px 5px 12px}.row,.grid{grid-template-columns:1fr}.card{padding:16px;border-radius:20px}.birth-selects{grid-template-columns:1.3fr .82fr .82fr}.birth-selects select{padding:13px 7px}.result-head{align-items:center}.title{font-size:1.5rem}.badge{font-size:.72rem}.planet{grid-template-columns:72px 1fr auto}}
@@ -57,7 +72,7 @@ button{margin-top:14px;border:0;background:linear-gradient(135deg,var(--accent),
 <body>
 <div class="wrap">
 <header class="hero">
-  <div class="eyebrow">WEEK × TODAY · v5.1</div>
+  <div class="eyebrow">WEEK × TODAY · v5.2</div>
   <h1>Coffee<br>Horoscope</h1>
   <p class="lead">ホロスコープ占いで、あなたにおすすめのコーヒーをご提案します。☕</p><p class="algorithm-note">※ホロスコープをもとに、アルゴリズムで導き出した結果です。</p>
 </header>
@@ -109,43 +124,34 @@ button{margin-top:14px;border:0;background:linear-gradient(135deg,var(--accent),
 
 <main id="result" class="hidden">
   <section class="card week-card">
-    <div class="result-head">
-      <div>
-        <div class="week-label" id="weekLabel">今週のおすすめコーヒー</div>
-        <h2 class="week-origin" id="origin"></h2>
-        <p class="week-sub" id="weekRange"></p>
-      </div>
-      <div class="badge" id="dominantBadge"></div>
-    </div>
-    <div class="index"><strong>☀ コーヒー指数</strong><span class="stars" id="coffeeStars"></span><span id="coffeeIndex"></span></div>
-  </section>
+<div class="week-copy">
+<div class="week-label" id="weekLabel">☕ 今週のおすすめコーヒー</div>
+<h2 class="week-origin" id="origin"></h2>
+<div class="week-period" id="weekRange"></div>
+<div class="index" style="margin-top:18px"><strong>☀ コーヒー指数</strong><span class="stars" id="coffeeStars"></span><span id="coffeeIndex"></span></div>
+</div>
+<div class="week-visual" aria-hidden="true">
+<img class="horoscope-mark" src="assets/horoscope-watermark.svg" alt="">
+<img class="coffee-art" src="assets/coffee-illustration.svg" alt="">
+</div>
+</section>
 
   <section class="card">
-    <div class="today-heading">
-      <div>
-        <div class="section-title">TODAY</div>
-        <h2>今日の楽しみ方</h2>
-      </div>
-      <div class="eyebrow" id="dateLabel"></div>
-    </div>
-    <div class="grid">
-      <div class="item"><div class="icon">🔥</div><small>焙煎度</small><strong id="roast"></strong></div>
-      <div class="item"><div class="icon">☕</div><small>抽出方法</small><strong id="style"></strong></div>
-      
-      <div class="item"><div class="icon">🌙</div><small>おすすめシーン</small><strong id="scene"></strong></div>
-      <div class="item"><div class="icon">👥</div><small>誰と飲む？</small><strong id="connection"></strong></div>
-      <div class="item"><div class="icon">✨</div><small>今日のテーマ</small><strong id="theme"></strong></div>
-    </div>
-  </section>
+<div class="today-heading"><div><div class="section-title">TODAY'S DATA</div><h2>今日のコーヒー</h2></div><div class="eyebrow" id="dateLabel"></div></div>
+<div class="today-grid">
+<div class="item"><div class="icon">🔥</div><small>焙煎度</small><strong id="roast"></strong></div>
+<div class="item"><div class="icon">☕</div><small>抽出方法</small><strong id="style"></strong></div>
+<div class="item"><div class="icon">🌙</div><small>おすすめシーン</small><strong id="scene"></strong></div>
+<div class="item"><div class="icon">👥</div><small>誰と飲む？</small><strong id="connection"></strong></div>
+<div class="item wide"><div class="icon">✨</div><small>今日のテーマ</small><strong id="theme"></strong></div>
+</div></section>
   <section class="card sweets-card">
-    <div class="section-title">🍰 今日のスイーツ</div>
-    <h3 class="sweets-name" id="pairing"></h3>
-    <p class="sweets-description" id="pairingDescription"></p>
-    <div class="recipe-actions">
-      <a class="recipe-link" id="recipePrimary" href="#" target="_blank" rel="noopener noreferrer">📖 レシピを探す</a>
-      <a class="recipe-link secondary" id="recipeVideo" href="#" target="_blank" rel="noopener noreferrer">▶ 動画で探す</a>
-    </div>
-  </section>
+<div class="section-title">🍰 今日のスイーツ</div>
+<div class="sweets-layout">
+<div class="sweets-image-wrap"><img id="sweetsImage" src="assets/sweets-placeholder.svg" alt=""></div>
+<div><h3 class="sweets-name" id="pairing"></h3><p class="sweets-description" id="pairingDescription"></p>
+<div class="recipe-actions"><a class="recipe-link" id="recipePrimary" href="#" target="_blank" rel="noopener noreferrer">📖 レシピを探す</a><a class="recipe-link secondary" id="recipeVideo" href="#" target="_blank" rel="noopener noreferrer">▶ 動画で探す</a></div></div>
+</div></section>
 
   <section class="card message-card">
     <div class="section-title">✨ 星からのメッセージ</div>
@@ -220,17 +226,7 @@ const todayMessages={active:"少し勢いをつけて、迷わず一杯を選ぶ
 
 
 const wagashiCatalog=[
- {label:"栗まんじゅう",tags:["sweet","classic","deep"]},
- {label:"どら焼き",tags:["sweet","classic","soft"]},
- {label:"羊羹",tags:["deep","classic","strong"]},
- {label:"最中",tags:["sweet","classic","clear"]},
- {label:"豆大福",tags:["soft","sweet","classic"]},
- {label:"芋ようかん",tags:["deep","sweet","soft"]},
- {label:"きんつば",tags:["deep","classic","sweet"]},
- {label:"みたらし団子",tags:["sweet","social","classic"]},
- {label:"かりんとう",tags:["deep","strong","classic"]},
- {label:"カステラ",tags:["soft","sweet","classic"]}
-];
+{label:"栗まんじゅう",tags:["sweet","classic","deep"]},{label:"どら焼き",tags:["sweet","classic","soft"]},{label:"羊羹",tags:["deep","classic","strong"]},{label:"最中",tags:["sweet","classic","clear"]},{label:"豆大福",tags:["soft","sweet","classic"]},{label:"芋ようかん",tags:["deep","sweet","soft"]},{label:"きんつば",tags:["deep","classic","sweet"]},{label:"みたらし団子",tags:["sweet","social","classic"]},{label:"かりんとう",tags:["deep","strong","classic"]},{label:"カステラ",tags:["soft","sweet","classic"]}];
 
 const sweetCommentByTag={
  bright:"爽やかな甘さが、コーヒーの明るい香りを引き立てます。",
@@ -251,6 +247,9 @@ const sweetCommentByTag={
  rare:"少し特別な甘さが、今日のコーヒーを印象的な一杯にしてくれます。"
 };
 
+const sweetImageMap={
+"どら焼き":"assets/sweets/dorayaki.webp","羊羹":"assets/sweets/yokan.webp","最中":"assets/sweets/monaka.webp","豆大福":"assets/sweets/mamedaifuku.webp","栗まんじゅう":"assets/sweets/kuri-manju.webp","カステラ":"assets/sweets/castella.webp","みたらし団子":"assets/sweets/mitarashi.webp","芋ようかん":"assets/sweets/imo-yokan.webp","きんつば":"assets/sweets/kintsuba.webp","かりんとう":"assets/sweets/karinto.webp"};
+function sweetImageFor(name){return sweetImageMap[name]||"assets/sweets-placeholder.svg";}
 function sweetDescription(item,origin,roast){
  const tag=(item.tags||[])[0]||"sweet";
  const base=sweetCommentByTag[tag]||sweetCommentByTag.sweet;
@@ -475,7 +474,7 @@ function chooseDailyRoast(origin,w,seed,dayNo){
 }
 function chooseDailyPairing(origin,w,seed,dayNo,code){
  let items=[...(pairingCatalog[origin]||[{label:"お気に入りの焼き菓子",tags:["classic","sweet"]}])];
- if(code==="JP")items=items.concat(wagashiCatalog);
+ items=items.concat(wagashiCatalog);
  const normalized=items.map((x,i)=>({id:`pair-${i}`,label:x.label,tags:x.tags}));
  return chooseDaily(normalized,w,seed,dayNo,Math.min(7,normalized.length));
 }
@@ -516,12 +515,12 @@ function calculate(){
   document.getElementById("origin").textContent=c.origin;
   document.getElementById("weekRange").textContent=`${fmtDate(c.weekStart)} 〜 ${fmtDate(c.weekEnd)}`;
   document.getElementById("dateLabel").textContent=`${fmtDate(c.today)} / ${c.countryName}`;
-  document.getElementById("dominantBadge").textContent=`今週の豆`;
   document.getElementById("coffeeStars").textContent="★".repeat(c.coffeeIndex)+"☆".repeat(5-c.coffeeIndex);
   document.getElementById("coffeeIndex").textContent=`${c.coffeeIndex}/5`;
   document.getElementById("roast").textContent=c.roast;
   document.getElementById("style").textContent=c.brew.label;
   document.getElementById("pairing").textContent=c.pairing.label;
+  const sweetsImage=document.getElementById("sweetsImage");sweetsImage.src=sweetImageFor(c.pairing.label);sweetsImage.alt=c.pairing.label;
   document.getElementById("pairingDescription").textContent=sweetDescription(c.pairing,c.origin,c.roast);
   const recipeLinks=recipeSearchLinks(c.code,c.pairing.label);
   const primary=document.getElementById("recipePrimary"),video=document.getElementById("recipeVideo");
