@@ -34,15 +34,23 @@ button{margin-top:14px;border:0;background:linear-gradient(135deg,var(--accent),
 .planet-list{display:grid;gap:9px}.planet{display:grid;grid-template-columns:84px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
 .planet:last-child{border-bottom:0}.planet .pname{font-weight:800}.planet .detail{color:var(--muted);font-size:.88rem}.planet .score{font-weight:850;color:var(--accent)}
 .footer{font-size:.76rem;color:var(--muted);line-height:1.7;padding:12px 6px}
+.week-card{overflow:hidden;position:relative;background:linear-gradient(145deg,#fffdf9,#f6e8d8)}
+.week-card:after{content:"✦";position:absolute;right:20px;top:14px;font-size:3.1rem;color:rgba(177,116,56,.12)}
+.week-label{font-size:.76rem;letter-spacing:.14em;color:var(--accent);font-weight:850}
+.week-origin{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.3rem,10vw,4.4rem);line-height:1;margin:.55rem 0 .35rem}
+.week-sub{color:var(--muted);font-size:.88rem;margin:0}
+.today-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}
+.today-heading h2{font-family:Georgia,"Times New Roman",serif;font-size:1.65rem;margin:0}
+
 @media(max-width:570px){.wrap{padding:14px 10px 42px}.hero{padding:20px 5px 12px}.row,.grid{grid-template-columns:1fr}.card{padding:16px;border-radius:20px}.birth-selects{grid-template-columns:1.3fr .82fr .82fr}.birth-selects select{padding:13px 7px}.result-head{align-items:center}.title{font-size:1.5rem}.badge{font-size:.72rem}.planet{grid-template-columns:72px 1fr auto}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header class="hero">
-  <div class="eyebrow">NATAL × TODAY'S TRANSIT · v4.1</div>
+  <div class="eyebrow">WEEK × TODAY · v5</div>
   <h1>Coffee<br>Horoscope</h1>
-  <p class="lead">ホロスコープをもとに、今日のコーヒーをご提案します。☕</p>
+  <p class="lead">ホロスコープをもとに、今週の豆と今日の楽しみ方をご提案します。☕</p>
 </header>
 
 <section class="card">
@@ -84,38 +92,52 @@ button{margin-top:14px;border:0;background:linear-gradient(135deg,var(--accent),
       </select>
     </div>
   </div>
-  <button id="go">今日のコーヒーを占う</button>
+  <button id="go">今週と今日のコーヒーを占う</button>
   <p class="note">入力内容はこの端末に保存され、次回からそのまま使えます。</p>
 </section>
 
 <div id="error" class="status hidden"></div>
 
 <main id="result" class="hidden">
-  <section class="card">
+  <section class="card week-card">
     <div class="result-head">
-      <div><div class="eyebrow" id="dateLabel"></div><h2 class="title" id="headline"></h2></div>
+      <div>
+        <div class="week-label" id="weekLabel">今週のおすすめコーヒー</div>
+        <h2 class="week-origin" id="origin"></h2>
+        <p class="week-sub" id="weekRange"></p>
+      </div>
       <div class="badge" id="dominantBadge"></div>
     </div>
-    <div class="index"><strong>☀ コーヒー日和</strong><span class="stars" id="coffeeStars"></span><span id="coffeeIndex"></span></div>
-    
+    <div class="index"><strong>☀ コーヒー指数</strong><span class="stars" id="coffeeStars"></span><span id="coffeeIndex"></span></div>
   </section>
 
   <section class="card">
-    <div class="section-title">TODAY'S CUP</div>
+    <div class="today-heading">
+      <div>
+        <div class="section-title">TODAY</div>
+        <h2>今日の楽しみ方</h2>
+      </div>
+      <div class="eyebrow" id="dateLabel"></div>
+    </div>
     <div class="grid">
-      <div class="item"><div class="icon">🌍</div><small>おすすめ産地</small><strong id="origin"></strong></div>
       <div class="item"><div class="icon">🔥</div><small>焙煎度</small><strong id="roast"></strong></div>
       <div class="item"><div class="icon">☕</div><small>抽出方法</small><strong id="style"></strong></div>
+      <div class="item"><div class="icon">🍰</div><small>今日のお供</small><strong id="pairing"></strong></div>
       <div class="item"><div class="icon">🌙</div><small>おすすめシーン</small><strong id="scene"></strong></div>
       <div class="item"><div class="icon">👥</div><small>誰と飲む？</small><strong id="connection"></strong></div>
       <div class="item"><div class="icon">✨</div><small>今日のテーマ</small><strong id="theme"></strong></div>
     </div>
   </section>
-  <section class="card message-card"><div class="section-title">✨ 星からのメッセージ</div><p class="tip" id="todayMessage"></p></section>
 
-  <section class="card"><div class="section-title">PAIRING</div><p class="tip" id="pairing"></p></section>
-  <section class="card"><div class="section-title">COFFEE TIP</div><p class="tip" id="tip"></p></section>
-  
+  <section class="card message-card">
+    <div class="section-title">✨ 星からのメッセージ</div>
+    <p class="tip" id="todayMessage"></p>
+  </section>
+
+  <section class="card">
+    <div class="section-title">COFFEE TIP</div>
+    <p class="tip" id="tip"></p>
+  </section>
 </main>
 
 <div class="footer">ホロスコープをもとにした、コーヒーを楽しむためのエンターテインメントです。</div>
@@ -177,6 +199,80 @@ const originOptions=[
  {name:"ケニア",tags:["bright","floral","adventure"]},{name:"ブラジル",tags:["sweet","deep","classic"]},{name:"エチオピア",tags:["floral","bright","adventure"]},{name:"グアテマラ",tags:["balanced","sweet","classic"]},{name:"パナマ",tags:["floral","rare","bright"]},{name:"コロンビア",tags:["balanced","sweet","social"]},{name:"コスタリカ",tags:["bright","sweet","clear"]},{name:"インドネシア",tags:["deep","spice","classic"]},{name:"タンザニア",tags:["bright","berry","adventure"]},{name:"ペルー",tags:["balanced","soft","classic"]},{name:"ルワンダ",tags:["bright","floral","adventure"]},{name:"イエメン",tags:["deep","rare","spice"]}
 ];
 const todayMessages={active:"少し勢いをつけて、迷わず一杯を選ぶと流れに乗れそうです。",calm:"今日は急がず、香りと余韻をゆっくり楽しむのがよさそうです。",social:"誰かとコーヒーを囲むことで、思いがけない会話が生まれそうです。",adventure:"いつもと少し違う一杯を選ぶと、新しい発見につながりそうです。",classic:"慣れた飲み方を丁寧に楽しむと、落ち着いた時間になりそうです。",floral:"香りを意識して、最初のひと口をゆっくり味わってみてください。",deep:"今日はコクや余韻を楽しむ一杯が似合いそうです。",clear:"すっきりした後味の一杯で、気分を切り替えてみましょう。",soft:"やわらかな口当たりの一杯が、今日の気分に寄り添いそうです。"};
+
+const pairingCatalog={
+ "ケニア":[
+  {label:"ベリータルト",tags:["bright","berry","floral"]},{label:"オレンジピール",tags:["bright","clear"]},
+  {label:"カカオニブ",tags:["deep","adventure"]},{label:"レモンケーキ",tags:["bright","floral"]},
+  {label:"ダークチョコレート",tags:["deep","strong"]},{label:"ヨーグルトケーキ",tags:["soft","bright"]},
+  {label:"スコーン",tags:["classic","sweet"]},{label:"フルーツゼリー",tags:["clear","cool"]}
+ ],
+ "ブラジル":[
+  {label:"ミルクチョコレート",tags:["sweet","milk"]},{label:"ナッツ",tags:["classic","deep"]},
+  {label:"フィナンシェ",tags:["sweet","classic"]},{label:"キャラメルクッキー",tags:["sweet","deep"]},
+  {label:"バナナブレッド",tags:["soft","sweet"]},{label:"チーズケーキ",tags:["milk","soft"]},
+  {label:"ビスコッティ",tags:["classic","strong"]},{label:"ブラウニー",tags:["deep","strong"]}
+ ],
+ "エチオピア":[
+  {label:"レモンケーキ",tags:["bright","floral"]},{label:"ドライフルーツ",tags:["floral","sweet"]},
+  {label:"フルーツゼリー",tags:["clear","cool"]},{label:"マカロン",tags:["floral","adventure"]},
+  {label:"紅茶クッキー",tags:["floral","classic"]},{label:"ヨーグルト菓子",tags:["soft","bright"]},
+  {label:"オレンジケーキ",tags:["bright","sweet"]},{label:"ホワイトチョコレート",tags:["milk","soft"]}
+ ],
+ "グアテマラ":[
+  {label:"バタークッキー",tags:["classic","sweet"]},{label:"シナモンロール",tags:["spice","sweet"]},
+  {label:"キャラメル菓子",tags:["deep","sweet"]},{label:"アップルパイ",tags:["sweet","classic"]},
+  {label:"ミルクチョコレート",tags:["milk","sweet"]},{label:"ナッツタルト",tags:["deep","classic"]},
+  {label:"カステラ",tags:["soft","classic"]},{label:"メープルスコーン",tags:["sweet","social"]}
+ ],
+ "パナマ":[
+  {label:"フルーツタルト",tags:["floral","bright"]},{label:"マカロン",tags:["floral","rare"]},
+  {label:"上品な焼き菓子",tags:["classic","rare"]},{label:"白桃ゼリー",tags:["clear","floral"]},
+  {label:"レモンマドレーヌ",tags:["bright","sweet"]},{label:"ホワイトチョコレート",tags:["soft","rare"]},
+  {label:"ピスタチオ菓子",tags:["adventure","sweet"]},{label:"シャンパン風味のゼリー",tags:["rare","social"]}
+ ],
+ "コロンビア":[
+  {label:"カステラ",tags:["soft","classic"]},{label:"ミルクチョコレート",tags:["milk","sweet"]},
+  {label:"バタークッキー",tags:["classic","sweet"]},{label:"チーズケーキ",tags:["soft","milk"]},
+  {label:"キャラメルポップコーン",tags:["social","sweet"]},{label:"パウンドケーキ",tags:["classic","balanced"]},
+  {label:"ナッツチョコ",tags:["deep","sweet"]},{label:"フルーツサンド",tags:["bright","social"]}
+ ],
+ "コスタリカ":[
+  {label:"アップルパイ",tags:["sweet","classic"]},{label:"ナッツ菓子",tags:["deep","classic"]},
+  {label:"はちみつトースト",tags:["sweet","social"]},{label:"オレンジケーキ",tags:["bright","sweet"]},
+  {label:"シナモンクッキー",tags:["spice","classic"]},{label:"ヨーグルトタルト",tags:["soft","bright"]},
+  {label:"キャラメルプリン",tags:["soft","sweet"]},{label:"ドライマンゴー",tags:["bright","adventure"]}
+ ],
+ "インドネシア":[
+  {label:"ダークチョコレート",tags:["deep","strong"]},{label:"黒糖菓子",tags:["deep","sweet"]},
+  {label:"スパイスクッキー",tags:["spice","classic"]},{label:"チーズケーキ",tags:["soft","deep"]},
+  {label:"ナッツブラウニー",tags:["deep","sweet"]},{label:"シナモンロール",tags:["spice","sweet"]},
+  {label:"羊羹",tags:["classic","deep"]},{label:"バナナケーキ",tags:["soft","sweet"]}
+ ],
+ "タンザニア":[
+  {label:"ベリー系の菓子",tags:["berry","bright"]},{label:"オレンジケーキ",tags:["bright","sweet"]},
+  {label:"チョコスコーン",tags:["deep","classic"]},{label:"レモンタルト",tags:["clear","bright"]},
+  {label:"ドライクランベリー",tags:["berry","adventure"]},{label:"マドレーヌ",tags:["soft","classic"]},
+  {label:"カカオクッキー",tags:["deep","sweet"]},{label:"フルーツヨーグルト",tags:["soft","bright"]}
+ ],
+ "ペルー":[
+  {label:"カカオ菓子",tags:["deep","classic"]},{label:"素朴なビスケット",tags:["classic","balanced"]},
+  {label:"ナッツ",tags:["deep","classic"]},{label:"キャラメルプリン",tags:["soft","sweet"]},
+  {label:"ミルクチョコレート",tags:["milk","sweet"]},{label:"バターケーキ",tags:["classic","sweet"]},
+  {label:"ドライいちじく",tags:["deep","adventure"]},{label:"チーズタルト",tags:["soft","balanced"]}
+ ],
+ "ルワンダ":[
+  {label:"赤い果実のタルト",tags:["berry","bright"]},{label:"紅茶クッキー",tags:["floral","classic"]},
+  {label:"ヨーグルト菓子",tags:["soft","bright"]},{label:"ラズベリーチョコ",tags:["berry","deep"]},
+  {label:"レモンスコーン",tags:["bright","classic"]},{label:"マカロン",tags:["floral","adventure"]},
+  {label:"ドライチェリー",tags:["berry","adventure"]},{label:"バニラケーキ",tags:["soft","sweet"]}
+ ],
+ "イエメン":[
+  {label:"デーツ",tags:["deep","classic"]},{label:"スパイスケーキ",tags:["spice","deep"]},
+  {label:"ビターチョコレート",tags:["deep","strong"]},{label:"はちみつ菓子",tags:["sweet","classic"]},
+  {label:"シナモンクッキー",tags:["spice","sweet"]},{label:"ナッツタルト",tags:["deep","classic"]},
+  {label:"ドライいちじく",tags:["deep","adventure"]},{label:"黒糖ケーキ",tags:["deep","sweet"]}
+ ]};
 const aspectDefs=[["コンジャンクション",0,5],["セクスタイル",60,3],["スクエア",90,4],["トライン",120,4],["オポジション",180,5]];
 
 function mod360(x){x%=360;return x<0?x+360:x}
@@ -242,14 +338,127 @@ function stableIndex(text,max){let h=2166136261;for(let i=0;i<text.length;i++){h
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
 function scoreTags(tags,w){return tags.reduce((s,t)=>s+(w[t]||0),0)}
-function weightsFromAspects(a){const w={};const add=(t,v)=>w[t]=(w[t]||0)+v;const S=n=>a[n].score;add("active",S("火星")*2+S("太陽"));add("strong",S("火星")*2+S("冥王星"));add("social",S("水星")*2+S("木星"));add("milk",S("月")+S("木星"));add("classic",S("土星")*2+S("太陽"));add("adventure",S("天王星")*2+S("木星"));add("floral",S("金星")*2+S("海王星"));add("bright",S("金星")+S("太陽")+S("天王星"));add("deep",S("冥王星")*2+S("土星"));add("sweet",S("金星")+S("木星")+S("月"));add("clear",S("水星")+S("太陽")+S("天王星"));add("soft",S("月")*2+S("海王星"));add("cool",S("月")+S("天王星"));add("balanced",S("土星")+S("水星")+S("金星"));add("rare",S("冥王星")*2+S("天王星"));add("spice",S("冥王星")+S("火星"));add("berry",S("金星")+S("天王星"));add("calm",S("月")+S("土星")+S("海王星"));return w}
-function dailyBoost(seed,key,range=4){return stableIndex(seed+"|daily|"+key,range*1000)/1000}
-function choose(items,w,seed){return items.map((item,i)=>({item,score:scoreTags(item.tags||[],w)+dailyBoost(seed,item.id||i,4)})).sort((a,b)=>b.score-a.score)[0].item}
-function chooseOrigin(base,w,seed){return originOptions.map((item,i)=>({item,score:scoreTags(item.tags,w)+(item.name===base?2.2:0)+dailyBoost(seed,"origin-"+item.name,4.5)})).sort((a,b)=>b.score-a.score)[0].item.name}
-function chooseRoast(origin,w,seed){const rt={"浅煎り":["bright","floral","clear","adventure"],"中煎り":["balanced","sweet","social"],"中深煎り":["deep","sweet","classic"],"深煎り":["deep","strong","classic"]};return (roastRanges[origin]||["中煎り"]).map((r,i)=>({r,score:scoreTags(rt[r]||[],w)+dailyBoost(seed,"roast-"+r,3.5)})).sort((a,b)=>b.score-a.score)[0].r}
-function buildCandidate(birth,countryValue,hour){const [code,offsetStr,countryName,capital]=countryValue.split("|");const offset=Number(offsetStr);const [y,m,d]=birth.split("-").map(Number);const birthDate=new Date(Date.UTC(y,m-1,d,hour-offset));const now=new Date(),today=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),3));const bodies=[["太陽","Sun"],["月","Moon"],["水星","Mercury"],["金星","Venus"],["火星","Mars"],["木星","Jupiter"],["土星","Saturn"],["天王星","Uranus"],["海王星","Neptune"],["冥王星","Pluto"]],natal={},transit={};bodies.forEach(([jp,en])=>{natal[jp]=planetLon(en,birthDate);transit[jp]=planetLon(en,today)});const inner=["太陽","月","水星","金星","火星"],aspects={};bodies.forEach(([jp])=>aspects[jp]=strongestAspect(transit[jp],natal,inner));const natalSigns={};inner.forEach(n=>natalSigns[n]=signFromLon(natal[n]));const sun=coffee[natalSigns["太陽"]],moon=coffee[natalSigns["月"]],mercury=coffee[natalSigns["水星"]],venus=coffee[natalSigns["金星"]];const w=weightsFromAspects(aspects),dayKey=today.toISOString().slice(0,10),seed=`${birth}|${code}|${dayKey}|${hour}`,origin=chooseOrigin(venus.origin,w,seed),roast=chooseRoast(origin,w,seed),market=marketByCountry[code]||"east",brew=choose(brewCatalog[market],w,seed+"|b"),tone=choose(Object.keys(todayMessages).map(id=>({id,tags:[id]})),w,seed+"|t").id,outer=["木星","土星","天王星","海王星","冥王星"].map(n=>({name:n,...aspects[n]})).sort((a,b)=>b.score-a.score),dominant=outer[0],coffeeIndex=Math.max(1,Math.min(5,Math.round((aspects["太陽"].score+aspects["月"].score+aspects["水星"].score+aspects["金星"].score+aspects["火星"].score+Math.max(1,dominant.score))/6))),candidateScore=Object.values(aspects).reduce((s,x)=>s+x.score,0)*10+Object.values(aspects).filter(x=>x.score>=3).length*7+scoreTags(brew.tags,w)+hour/6;return{hour,code,countryName,capital,today,bodies,transit,aspects,natalSigns,sun,moon,mercury,origin,roast,brew,tone,dominant,coffeeIndex,candidateScore}}
-function calculate(){const birth=getBirthValue();if(!birth){alert("生年月日を入力してください");return}try{const countryValue=document.getElementById("country").value,c=[0,6,12,18].map(h=>buildCandidate(birth,countryValue,h)).sort((a,b)=>b.candidateScore-a.candidateScore)[0],dayKey=c.today.toISOString().slice(0,10),pair=pairings[c.origin][stableIndex(birth+c.code+dayKey+c.origin+c.hour,pairings[c.origin].length)];let rare="";if(c.dominant.name==="冥王星"&&c.dominant.score>=4)rare=" とっておきの豆を持っているなら、今日は開ける候補日です。";document.getElementById("dateLabel").textContent=`${dayKey.replaceAll("-",".")} / ${c.countryName}・${c.capital}基準`;document.getElementById("headline").textContent=`${c.origin}を、${c.brew.label}で。`;document.getElementById("dominantBadge").textContent=`コーヒー日和 ${c.coffeeIndex}/5`;document.getElementById("coffeeStars").textContent="★".repeat(c.coffeeIndex)+"☆".repeat(5-c.coffeeIndex);document.getElementById("coffeeIndex").textContent=`${c.coffeeIndex}/5`;document.getElementById("origin").textContent=c.origin;document.getElementById("roast").textContent=c.roast;document.getElementById("style").textContent=c.brew.label;document.getElementById("scene").textContent=c.moon.scene;document.getElementById("connection").textContent=c.mercury.connection;document.getElementById("theme").textContent=c.sun.theme;document.getElementById("todayMessage").textContent=todayMessages[c.tone];document.getElementById("pairing").textContent=`今日のお供は「${pair}」。${c.origin}の${c.roast}に合わせた提案です。`;const tips={v60:"透明感と香りを楽しみたい日に向くペーパードリップです。",kalita:"甘さとバランスをまとめやすいペーパードリップです。",origami:"華やかな香りや果実感を楽しみたい日に向きます。",switch:"浸漬と透過の両方を楽しめるペーパードリップです。",nel:"丸みのある口当たりとコクを楽しみたい日に向きます。",iced:"急冷すると香りを残しながら、すっきり仕上げやすくなります。",cold:"水でゆっくり抽出すると、やわらかな口当たりになりやすいです。",espresso:"短時間で凝縮した香りと味わいを楽しむスタイルです。",americano:"エスプレッソをお湯でのばし、香りを軽やかに楽しみます。",cappuccino:"エスプレッソとフォームミルクのバランスを楽しむ一杯です。",latte:"ミルクの甘さとエスプレッソの組み合わせを楽しみます。",macchiato:"エスプレッソに少量のミルクを加えるスタイルです。",french:"豆の油分やボディを感じやすい抽出方法です。",flatwhite:"きめ細かなミルクとしっかりしたエスプレッソ感を楽しみます。",longblack:"お湯にエスプレッソを注ぎ、香りを残しやすくした一杯です。",drip:"親しみやすく、日常的に楽しみやすいドリップコーヒーです。",batch:"まとまりのよい味を気軽に楽しめる抽出スタイルです。"};document.getElementById("tip").textContent=tips[c.brew.id]||"今日の気分に合わせて、無理なく楽しめる一杯を選んでみましょう。";document.getElementById("error").classList.add("hidden");document.getElementById("result").classList.remove("hidden");localStorage.setItem("coffeeBirth",birth);localStorage.setItem("coffeeCountry",countryValue);setTimeout(()=>document.getElementById("result").scrollIntoView({behavior:"smooth",block:"start"}),50)}catch(e){document.getElementById("error").textContent="計算エラー："+e.message;document.getElementById("error").classList.remove("hidden")}}
+function weightsFromAspects(a){
+ const w={};const add=(t,v)=>w[t]=(w[t]||0)+v;const S=n=>a[n].score;
+ add("active",S("火星")*2+S("太陽"));add("strong",S("火星")*2+S("冥王星"));
+ add("social",S("水星")*2+S("木星"));add("milk",S("月")+S("木星"));
+ add("classic",S("土星")*2+S("太陽"));add("adventure",S("天王星")*2+S("木星"));
+ add("floral",S("金星")*2+S("海王星"));add("bright",S("金星")+S("太陽")+S("天王星"));
+ add("deep",S("冥王星")*2+S("土星"));add("sweet",S("金星")+S("木星")+S("月"));
+ add("clear",S("水星")+S("太陽")+S("天王星"));add("soft",S("月")*2+S("海王星"));
+ add("cool",S("月")+S("天王星"));add("balanced",S("土星")+S("水星")+S("金星"));
+ add("rare",S("冥王星")*2+S("天王星"));add("spice",S("冥王星")+S("火星"));
+ add("berry",S("金星")+S("天王星"));add("calm",S("月")+S("土星")+S("海王星"));
+ return w;
+}
+function dayNumberUTC(date){return Math.floor(date.getTime()/86400000)}
+function mondayOf(date){
+ const d=new Date(date.getTime()),day=(d.getUTCDay()+6)%7;
+ d.setUTCDate(d.getUTCDate()-day);d.setUTCHours(3,0,0,0);return d;
+}
+function fmtDate(date){return `${date.getUTCFullYear()}.${String(date.getUTCMonth()+1).padStart(2,"0")}.${String(date.getUTCDate()).padStart(2,"0")}`}
+function aspectsAt(date,natal,bodies,inner){
+ const transit={},aspects={};
+ bodies.forEach(([jp,en])=>transit[jp]=planetLon(en,date));
+ bodies.forEach(([jp])=>aspects[jp]=strongestAspect(transit[jp],natal,inner));
+ return {transit,aspects};
+}
+function ranked(items,w,seed,bonusFn=()=>0){
+ return items.map((item,i)=>({
+  item,
+  score:scoreTags(item.tags||[],w)+bonusFn(item)+stableIndex(`${seed}|${item.id||item.name||item.label}|${i}`,1000)/1000
+ })).sort((a,b)=>b.score-a.score);
+}
+function chooseDaily(items,w,seed,dayNo,topN=4){
+ const list=ranked(items,w,seed),count=Math.min(topN,list.length);
+ return list[((dayNo%count)+count)%count].item;
+}
+function rankWeeklyOrigins(base,w,seed){
+ return ranked(originOptions,w,seed,item=>item.name===base?3.2:0);
+}
+function weeklyOrigin(base,w,seed,previousName){
+ const list=rankWeeklyOrigins(base,w,seed);
+ const selected=list[0].item.name;
+ if(selected!==previousName)return selected;
+ return (list[1]||list[0]).item.name;
+}
+function chooseDailyRoast(origin,w,seed,dayNo){
+ const all=["浅煎り","中煎り","中深煎り","深煎り"];
+ const rt={
+  "浅煎り":["bright","floral","clear","adventure"],
+  "中煎り":["balanced","sweet","social"],
+  "中深煎り":["deep","sweet","classic"],
+  "深煎り":["deep","strong","classic"]
+ };
+ const compatible=roastRanges[origin]||["中煎り"];
+ const items=all.map(id=>({id,tags:rt[id]}));
+ const list=ranked(items,w,seed,item=>compatible.includes(item.id)?2.2:-1.0);
+ const top=Math.min(3,list.length);
+ return list[dayNo%top].item.id;
+}
+function chooseDailyPairing(origin,w,seed,dayNo){
+ const items=pairingCatalog[origin]||[{label:"お気に入りの焼き菓子",tags:["classic","sweet"]}];
+ const normalized=items.map((x,i)=>({id:`pair-${i}`,label:x.label,tags:x.tags}));
+ return chooseDaily(normalized,w,seed,dayNo,5).label;
+}
+function buildCandidate(birth,countryValue,hour){
+ const [code,offsetStr,countryName,capital]=countryValue.split("|"),offset=Number(offsetStr);
+ const [y,m,d]=birth.split("-").map(Number);
+ const birthDate=new Date(Date.UTC(y,m-1,d,hour-offset));
+ const now=new Date(),today=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),3));
+ const weekStart=mondayOf(today),weekEnd=new Date(weekStart.getTime()+6*86400000);
+ const weekMid=new Date(weekStart.getTime()+3*86400000),prevWeekMid=new Date(weekMid.getTime()-7*86400000);
+ const bodies=[["太陽","Sun"],["月","Moon"],["水星","Mercury"],["金星","Venus"],["火星","Mars"],["木星","Jupiter"],["土星","Saturn"],["天王星","Uranus"],["海王星","Neptune"],["冥王星","Pluto"]];
+ const natal={};bodies.forEach(([jp,en])=>natal[jp]=planetLon(en,birthDate));
+ const inner=["太陽","月","水星","金星","火星"],natalSigns={};inner.forEach(n=>natalSigns[n]=signFromLon(natal[n]));
+ const daily=aspectsAt(today,natal,bodies,inner),weekly=aspectsAt(weekMid,natal,bodies,inner),previous=aspectsAt(prevWeekMid,natal,bodies,inner);
+ const dailyW=weightsFromAspects(daily.aspects),weeklyW=weightsFromAspects(weekly.aspects),prevW=weightsFromAspects(previous.aspects);
+ const sun=coffee[natalSigns["太陽"]],moon=coffee[natalSigns["月"]],mercury=coffee[natalSigns["水星"]],venus=coffee[natalSigns["金星"]];
+ const weekKey=weekStart.toISOString().slice(0,10),prevKey=new Date(weekStart.getTime()-7*86400000).toISOString().slice(0,10);
+ const baseSeed=`${birth}|${code}|${hour}`,prevOrigin=rankWeeklyOrigins(venus.origin,prevW,`${baseSeed}|${prevKey}`)[0].item.name;
+ const origin=weeklyOrigin(venus.origin,weeklyW,`${baseSeed}|${weekKey}`,prevOrigin);
+ const dayNo=dayNumberUTC(today),dailySeed=`${baseSeed}|${today.toISOString().slice(0,10)}|${origin}`;
+ const roast=chooseDailyRoast(origin,dailyW,`${dailySeed}|roast`,dayNo);
+ const market=marketByCountry[code]||"east";
+ const brew=chooseDaily(brewCatalog[market],dailyW,`${dailySeed}|brew`,dayNo,4);
+ const pairing=chooseDailyPairing(origin,dailyW,`${dailySeed}|pairing`,dayNo);
+ const tone=chooseDaily(Object.keys(todayMessages).map(id=>({id,tags:[id]})),dailyW,`${dailySeed}|tone`,dayNo,4).id;
+ const outer=["木星","土星","天王星","海王星","冥王星"].map(n=>({name:n,...daily.aspects[n]})).sort((a,b)=>b.score-a.score),dominant=outer[0];
+ const coffeeIndex=Math.max(1,Math.min(5,Math.round((daily.aspects["太陽"].score+daily.aspects["月"].score+daily.aspects["水星"].score+daily.aspects["金星"].score+daily.aspects["火星"].score+Math.max(1,dominant.score))/6)));
+ const candidateScore=Object.values(daily.aspects).reduce((s,x)=>s+x.score,0)*10+Object.values(daily.aspects).filter(x=>x.score>=3).length*7+scoreTags(brew.tags,dailyW)+hour/6;
+ return {hour,code,countryName,capital,today,weekStart,weekEnd,dailyAspects:daily.aspects,natalSigns,sun,moon,mercury,origin,roast,brew,pairing,tone,dominant,coffeeIndex,candidateScore};
+}
+function calculate(){
+ const birth=getBirthValue();if(!birth){alert("生年月日を入力してください");return}
+ try{
+  const countryValue=document.getElementById("country").value;
+  const c=[0,6,12,18].map(h=>buildCandidate(birth,countryValue,h)).sort((a,b)=>b.candidateScore-a.candidateScore)[0];
+  const dayKey=c.today.toISOString().slice(0,10);
+  document.getElementById("weekLabel").textContent="☕ 今週のおすすめコーヒー";
+  document.getElementById("origin").textContent=c.origin;
+  document.getElementById("weekRange").textContent=`${fmtDate(c.weekStart)} 〜 ${fmtDate(c.weekEnd)}`;
+  document.getElementById("dateLabel").textContent=`${fmtDate(c.today)} / ${c.countryName}`;
+  document.getElementById("dominantBadge").textContent=`今週の豆`;
+  document.getElementById("coffeeStars").textContent="★".repeat(c.coffeeIndex)+"☆".repeat(5-c.coffeeIndex);
+  document.getElementById("coffeeIndex").textContent=`${c.coffeeIndex}/5`;
+  document.getElementById("roast").textContent=c.roast;
+  document.getElementById("style").textContent=c.brew.label;
+  document.getElementById("pairing").textContent=c.pairing;
+  document.getElementById("scene").textContent=c.moon.scene;
+  document.getElementById("connection").textContent=c.mercury.connection;
+  document.getElementById("theme").textContent=c.sun.theme;
+  document.getElementById("todayMessage").textContent=todayMessages[c.tone];
 
+  const tips={v60:"透明感と香りを楽しみたい日に向くペーパードリップです。",kalita:"甘さとバランスをまとめやすいペーパードリップです。",origami:"華やかな香りや果実感を楽しみたい日に向きます。",switch:"浸漬と透過の両方を楽しめるペーパードリップです。",nel:"丸みのある口当たりとコクを楽しみたい日に向きます。",iced:"急冷すると香りを残しながら、すっきり仕上げやすくなります。",cold:"水でゆっくり抽出すると、やわらかな口当たりになりやすいです。",espresso:"短時間で凝縮した香りと味わいを楽しむスタイルです。",americano:"エスプレッソをお湯でのばし、香りを軽やかに楽しみます。",cappuccino:"エスプレッソとフォームミルクのバランスを楽しむ一杯です。",latte:"ミルクの甘さとエスプレッソの組み合わせを楽しみます。",macchiato:"エスプレッソに少量のミルクを加えるスタイルです。",french:"豆の油分やボディを感じやすい抽出方法です。",flatwhite:"きめ細かなミルクとしっかりしたエスプレッソ感を楽しみます。",longblack:"お湯にエスプレッソを注ぎ、香りを残しやすくした一杯です。",drip:"親しみやすく、日常的に楽しみやすいドリップコーヒーです。",batch:"まとまりのよい味を気軽に楽しめる抽出スタイルです。"};
+  document.getElementById("tip").textContent=tips[c.brew.id]||"今日の気分に合わせて、無理なく楽しめる一杯を選んでみましょう。";
+  document.getElementById("error").classList.add("hidden");document.getElementById("result").classList.remove("hidden");
+  localStorage.setItem("coffeeBirth",birth);localStorage.setItem("coffeeCountry",countryValue);
+  setTimeout(()=>document.getElementById("result").scrollIntoView({behavior:"smooth",block:"start"}),50);
+ }catch(e){
+  document.getElementById("error").textContent="計算エラー："+e.message;
+  document.getElementById("error").classList.remove("hidden");
+ }
+}
 function daysInMonth(year,month){return new Date(year,month,0).getDate()}
 function populateBirthSelectors(){
  const y=document.getElementById("birthYear"),m=document.getElementById("birthMonth"),d=document.getElementById("birthDay");
